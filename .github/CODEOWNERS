@@ -1,0 +1,7 @@
+# All permissions
+*       @GogoVega
+
+# Permission by file type
+*.cpp   @GogoVega
+*.h     @GogoVega
+*.md    @GogoVega
