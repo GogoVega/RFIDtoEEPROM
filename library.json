@@ -1,0 +1,20 @@
+{
+  "name": "RFID to EEPROM",
+  "version": "1.0.0",
+  "description": "Library to write an RFID code in the EEPROM in order to check if the code corresponds to a code already saved.",
+  "keywords": ["rfid", "eeprom"],
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/GogoVega/RFIDtoEEPROM.git"
+  },
+  "authors":
+  {
+    "name": "Gauthier Dandele",
+    "url": "https://github.com/GogoVega",
+    "maintainer": true
+  },
+  "license": "MIT",
+  "frameworks": "arduino",
+  "platforms": "atmelavr"
+}
