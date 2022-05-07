@@ -20,15 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef RFIDtoEEPROM_H
-#define RFIDtoEEPROM_H
+#ifndef Card_h
+#define Card_h
 
-#include <Arduino.h>
+#include <Code.h>
 
-class RFIDtoEEPROM
+class Card : protected Code
 {
   public:
-    RFIDtoEEPROM(uint8_t byteNumber = 4);
+    Card(uint8_t byteNumber = 4);
 
     bool CardCheck(byte Code[]);
     bool SaveCard(byte Code[]);
@@ -39,9 +39,9 @@ class RFIDtoEEPROM
 
   private:
     bool WriteCheck(byte Code[], uint8_t nbr);
-    void CardRestoration(int nbr);
+    void CardRestoration(uint8_t nbr);
     uint8_t _byteNumber;
     uint8_t _maxCards;
 };
 
-#endif  // _RFIDtoEEPROM_H
+#endif  // Card_h

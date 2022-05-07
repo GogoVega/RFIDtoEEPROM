@@ -25,20 +25,16 @@
 #if defined(__AVR__)
 // Arduino
 
-#include <EEPROM.h>
-
 // Returns the address according to the Number of Cards
-// a = Number of Cards
-// b = Loop Iteration
-#define OFFSET(a, b) ((a * _byteNumber) + 1 + b)
+#define OFFSET(a) ((a * _byteNumber) + 1)
 
 /*!
     @brief Constructor for RFIDtoEEPROM library.
     @param byteNumber the number of bytes contained in the RFID Card.
 */
-RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) {
+Card::Card(uint8_t byteNumber) {
   _byteNumber = byteNumber;
-  _maxCards = min(((EEPROM.length() - 1) / byteNumber), 255);
+  _maxCards = min(((Code::Length() - 1) / byteNumber), 255);
 }
 
 
@@ -46,8 +42,8 @@ RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) {
     @brief Returns the Number of Cards already registered.
     @return the Number of Cards already registered (uint8_t).
 */
-uint8_t RFIDtoEEPROM::CardNumber() {
-  return EEPROM.read(0);
+uint8_t Card::CardNumber() {
+  return Code::Read(0);
 }
 
 
@@ -55,15 +51,15 @@ uint8_t RFIDtoEEPROM::CardNumber() {
     @brief Returns the maximum Number of Cards that can be registered. The maximum is set at 255.
     @return the maximum Number of Cards (uint8_t).
 */
-uint8_t RFIDtoEEPROM::MaxCards() {
+uint8_t Card::MaxCards() {
   return _maxCards;
 }
 
 /*!
     @brief Reset the Number of Cards to 0.
 */
-void RFIDtoEEPROM::ClearCardNumber() {
-  EEPROM.update(0, 0);
+void Card::ClearCardNumber() {
+  Code::Write(0, 0);
 }
 
 
@@ -72,9 +68,9 @@ void RFIDtoEEPROM::ClearCardNumber() {
     @note The EEPROM memory has a specified life of 100,000 write/erase cycles,
      so you may need to be careful about how often you write to it.
 */
-void RFIDtoEEPROM::EraseAllCards() {
-  for (uint16_t i = 0; i < EEPROM.length() ; i++) {
-    EEPROM.update(i, 0);
+void Card::EraseAllCards() {
+  for (uint16_t n = 0; n < Code::Length(); n++) {
+    Code::Write(n, 0);
   }
 }
 
@@ -83,14 +79,13 @@ void RFIDtoEEPROM::EraseAllCards() {
     @brief Restoration of the old Card.
     @param nbr Old Card Number before the failure.
 */
-void RFIDtoEEPROM::CardRestoration(int nbr) {
+void Card::CardRestoration(uint8_t nbr) {
   /* Uncomment if you want to reset the Card
-  for (int n = 0; n < 4; n++) {
-    EEPROM.update(OFFSET(nbr, n), 0);
-  }
+  byte Code[_byteNumber] = {};
+  Code::Write(OFFSET(nbr), Code, _byteNumber);
   */
 
-  EEPROM.update(0, nbr);
+  Code::Write(0, nbr);
 }
 
 
@@ -100,12 +95,15 @@ void RFIDtoEEPROM::CardRestoration(int nbr) {
     @param nbr The number of Cards.
     @return true on successful writing (bool).
 */
-bool RFIDtoEEPROM::WriteCheck(byte Code[], uint8_t nbr) {
-  if (EEPROM.read(0) != (nbr + 1))
+bool Card::WriteCheck(byte Code[], uint8_t nbr) {
+  byte CodeRead[_byteNumber];
+
+  if (Code::Read(0) != (nbr + 1))
     return false;
 
+  Code::Read(OFFSET(nbr), CodeRead, _byteNumber);
   for (uint8_t n = 0; n < _byteNumber; n++) {
-    if (Code[n] != EEPROM.read(OFFSET(nbr, n)))
+    if (Code[n] != CodeRead[n])
       return false;
   }
 
@@ -118,17 +116,15 @@ bool RFIDtoEEPROM::WriteCheck(byte Code[], uint8_t nbr) {
     @param Code[] The UID of the RFID Code to save.
     @return true on successful saving (bool).
 */
-bool RFIDtoEEPROM::SaveCard(byte Code[]) {
+bool Card::SaveCard(byte Code[]) {
   const uint8_t nbr = CardNumber();
 
   if (nbr >= _maxCards)
     return false;
 
-  for (uint8_t n = 0; n < _byteNumber; n++) {
-    EEPROM.update(OFFSET(nbr, n), Code[n]);
-  }
+  Code::Write(OFFSET(nbr), Code, _byteNumber);
 
-  EEPROM.update(0, (nbr + 1));
+  Code::Write(0, (nbr + 1));
 
   if (!WriteCheck(Code, nbr)) {
     CardRestoration(nbr);
@@ -144,14 +140,16 @@ bool RFIDtoEEPROM::SaveCard(byte Code[]) {
     @param Code[] The UID of the RFID Code to Check.
     @return true if a Card Matches (bool).
 */
-bool RFIDtoEEPROM::CardCheck(byte Code[]) {
+bool Card::CardCheck(byte Code[]) {
   const uint8_t nbr = CardNumber();
+  byte CodeRead[_byteNumber];
 
   for (uint8_t i = 0; i < nbr; i++) {
     uint8_t match = 0;
 
+    Code::Read(OFFSET(i), CodeRead, _byteNumber);
     for (uint8_t n = 0; n < _byteNumber; n++) {
-      if (Code[n] == EEPROM.read(OFFSET(i, n)))
+      if (Code[n] == CodeRead[n])
         match++;
     }
 
