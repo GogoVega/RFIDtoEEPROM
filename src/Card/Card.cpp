@@ -91,11 +91,11 @@ void Card::CardRestoration(uint8_t nbr) {
 
 /*!
     @brief Checks if the Code has been correctly written in the EEPROM.
-    @param Code[] The UID of the RFID Code to Check.
+    @param Code The UID of the RFID Code to Check.
     @param nbr The number of Cards.
     @return true on successful writing (bool).
 */
-bool Card::WriteCheck(byte Code[], uint8_t nbr) {
+bool Card::WriteCheck(uint8_t nbr, byte* Code) {
   byte CodeRead[_byteNumber];
 
   if (Code::Read(0) != (nbr + 1))
@@ -119,14 +119,19 @@ bool Card::WriteCheck(byte Code[], uint8_t nbr) {
 bool Card::SaveCard(byte Code[]) {
   const uint8_t nbr = CardNumber();
 
+  // if Number of Cards over limit!
   if (nbr >= _maxCards)
     return false;
+
+  // if Card already saved!
+  if (CardCheck(Code))
+    return true;
 
   Code::Write(OFFSET(nbr), Code, _byteNumber);
 
   Code::Write(0, (nbr + 1));
 
-  if (!WriteCheck(Code, nbr)) {
+  if (!WriteCheck(nbr, Code)) {
     CardRestoration(nbr);
     return false;
   }

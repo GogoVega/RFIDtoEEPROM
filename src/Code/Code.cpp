@@ -42,8 +42,12 @@ void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
     Wire.endTransmission();
     Wire.requestFrom(_eepromAddr, byteNumber);
 
-    for (uint8_t i = 0; i < byteNumber; i++) {
-      Code[i] = Wire.read();
+    delayMicroseconds(500);
+
+    if (Wire.available()) {
+      for (uint8_t i = 0; i < byteNumber; i++) {
+        Code[i] = Wire.read();
+      }
     }
   }
 }
@@ -66,7 +70,6 @@ void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
     Wire.write(address);
     Wire.write(Code, byteNumber);
     Wire.endTransmission();
-    delayMicroseconds(500); 
   }
 }
 

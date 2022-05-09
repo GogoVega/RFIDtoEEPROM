@@ -38,7 +38,7 @@ class Card : protected Code
     uint8_t MaxCards(void);
 
   private:
-    bool WriteCheck(byte Code[], uint8_t nbr);
+    bool WriteCheck(uint8_t nbr, byte* Code);
     void CardRestoration(uint8_t nbr);
     uint8_t _byteNumber;
     uint8_t _maxCards;
