@@ -21,8 +21,62 @@
 // SOFTWARE.
 
 #include <RFIDtoEEPROM.h>
-#include <EEPROM.h>
 #include <Wire.h>
+
+#if defined(ARDUINO_ARCH_RP2040)
+
+/*!
+    @brief Read Code from EEPROM.
+    @param address Departure address for reading.
+    @param Code Variable that will be modified by reading.
+    @param byteNumber The Number of byte to read.
+*/
+void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
+{
+  Wire.beginTransmission(_eepromAddr);
+  Wire.write(address);
+  Wire.endTransmission();
+  Wire.requestFrom(_eepromAddr, byteNumber);
+
+  delayMicroseconds(500);
+
+  if (Wire.available())
+  {
+    for (uint8_t i = 0; i < byteNumber; i++)
+    {
+      Code[i] = Wire.read();
+    }
+  }
+}
+
+
+/*!
+    @brief Write Code to EEPROM.
+    @param address Departure address for writing.
+    @param Code Code to write.
+    @param byteNumber The Number of byte to write.
+*/
+void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
+{
+  Wire.beginTransmission(_eepromAddr);
+  Wire.write(address);
+  Wire.write(Code, byteNumber);
+  Wire.endTransmission();
+}
+
+
+/*!
+    @brief Returns the Number of Cells in the EEPROM.
+    @return the Number of Cells in the EEPROM (uint16_t).
+*/
+uint16_t Code::Length()
+{
+  return _eepromSize;
+}
+
+#else
+
+#include <EEPROM.h>
 
 /*!
     @brief Read Code from EEPROM.
@@ -71,7 +125,11 @@ void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
   {
     for (uint8_t n = 0; n < byteNumber; n++)
     {
+      #if defined(ESP8266) || defined(ESP32)
+      EEPROM.write((address + n), Code[n]);
+      #elif defined(__AVR__)
       EEPROM.update((address + n), Code[n]);
+      #endif
     }
   }
   else
@@ -83,6 +141,20 @@ void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
   }
 }
 
+
+/*!
+    @brief Returns the Number of Cells in the EEPROM.
+    @return the Number of Cells in the EEPROM (uint16_t).
+*/
+uint16_t Code::Length()
+{
+  if (_local)
+    return EEPROM.length();
+
+  return _eepromSize;
+}
+
+#endif
 
 /*!
     @brief Read byte from EEPROM.
@@ -106,17 +178,4 @@ uint8_t Code::Read(uint8_t address)
 void Code::Write(uint8_t address, uint8_t data)
 {
   Write(address, &data, 1);
-}
-
-
-/*!
-    @brief Returns the Number of Cells in the EEPROM.
-    @return the Number of Cells in the EEPROM (uint16_t).
-*/
-uint16_t Code::Length()
-{
-  if (_local)
-    return EEPROM.length();
-
-  return _eepromSize;
 }

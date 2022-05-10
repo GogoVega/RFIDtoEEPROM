@@ -22,6 +22,8 @@
 
 #include <RFIDtoEEPROM.h>
 
+#if !defined(ARDUINO_ARCH_RP2040)
+
 /*!
     @brief Constructor for RFIDtoEEPROM library.
     @param byteNumber the number of bytes contained in the RFID Card.
@@ -30,3 +32,5 @@ RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) : Card(byteNumber)
 {
   _local = true;
 }
+
+#endif

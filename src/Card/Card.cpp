@@ -22,8 +22,9 @@
 
 #include <RFIDtoEEPROM.h>
 
-#if defined(__AVR__)
-// Arduino
+#ifndef min
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#endif
 
 // Returns the address according to the Number of Cards
 #define OFFSET(a) ((a * _byteNumber) + 1)
@@ -180,9 +181,3 @@ bool Card::CardCheck(byte Code[])
 
   return false;
 }
-
-#else
-
-#error “Unsupported board selected!”
-
-#endif

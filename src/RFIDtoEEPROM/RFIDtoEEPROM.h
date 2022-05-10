@@ -25,12 +25,15 @@
 
 #include <Card.h>
 
+#if !defined(ARDUINO_ARCH_RP2040)
+
 class RFIDtoEEPROM : public Card
 {
   public:
     RFIDtoEEPROM(uint8_t byteNumber = 4);
 };
 
+#endif
 
 class RFIDtoEEPROM_I2C : public Card
 {
