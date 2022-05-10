@@ -32,7 +32,8 @@
     @brief Constructor for RFIDtoEEPROM library.
     @param byteNumber the number of bytes contained in the RFID Card.
 */
-Card::Card(uint8_t byteNumber) {
+Card::Card(uint8_t byteNumber)
+{
   _byteNumber = byteNumber;
   _maxCards = min(((Code::Length() - 1) / byteNumber), 255);
 }
@@ -42,7 +43,8 @@ Card::Card(uint8_t byteNumber) {
     @brief Returns the Number of Cards already registered.
     @return the Number of Cards already registered (uint8_t).
 */
-uint8_t Card::CardNumber() {
+uint8_t Card::CardNumber()
+{
   return Code::Read(0);
 }
 
@@ -51,14 +53,16 @@ uint8_t Card::CardNumber() {
     @brief Returns the maximum Number of Cards that can be registered. The maximum is set at 255.
     @return the maximum Number of Cards (uint8_t).
 */
-uint8_t Card::MaxCards() {
+uint8_t Card::MaxCards()
+{
   return _maxCards;
 }
 
 /*!
     @brief Reset the Number of Cards to 0.
 */
-void Card::ClearCardNumber() {
+void Card::ClearCardNumber()
+{
   Code::Write(0, 0);
 }
 
@@ -68,8 +72,10 @@ void Card::ClearCardNumber() {
     @note The EEPROM memory has a specified life of 100,000 write/erase cycles,
      so you may need to be careful about how often you write to it.
 */
-void Card::EraseAllCards() {
-  for (uint16_t n = 0; n < Code::Length(); n++) {
+void Card::EraseAllCards()
+{
+  for (uint16_t n = 0; n < Code::Length(); n++)
+  {
     Code::Write(n, 0);
   }
 }
@@ -79,7 +85,8 @@ void Card::EraseAllCards() {
     @brief Restoration of the old Card.
     @param nbr Old Card Number before the failure.
 */
-void Card::CardRestoration(uint8_t nbr) {
+void Card::CardRestoration(uint8_t nbr)
+{
   /* Uncomment if you want to reset the Card
   byte Code[_byteNumber] = {};
   Code::Write(OFFSET(nbr), Code, _byteNumber);
@@ -95,14 +102,16 @@ void Card::CardRestoration(uint8_t nbr) {
     @param nbr The number of Cards.
     @return true on successful writing (bool).
 */
-bool Card::WriteCheck(uint8_t nbr, byte* Code) {
+bool Card::WriteCheck(uint8_t nbr, byte* Code)
+{
   byte CodeRead[_byteNumber];
 
   if (Code::Read(0) != (nbr + 1))
     return false;
 
   Code::Read(OFFSET(nbr), CodeRead, _byteNumber);
-  for (uint8_t n = 0; n < _byteNumber; n++) {
+  for (uint8_t n = 0; n < _byteNumber; n++)
+  {
     if (Code[n] != CodeRead[n])
       return false;
   }
@@ -116,7 +125,8 @@ bool Card::WriteCheck(uint8_t nbr, byte* Code) {
     @param Code[] The UID of the RFID Code to save.
     @return true on successful saving (bool).
 */
-bool Card::SaveCard(byte Code[]) {
+bool Card::SaveCard(byte Code[])
+{
   const uint8_t nbr = CardNumber();
 
   // if Number of Cards over limit!
@@ -131,7 +141,8 @@ bool Card::SaveCard(byte Code[]) {
 
   Code::Write(0, (nbr + 1));
 
-  if (!WriteCheck(nbr, Code)) {
+  if (!WriteCheck(nbr, Code))
+  {
     CardRestoration(nbr);
     return false;
   }
@@ -145,20 +156,24 @@ bool Card::SaveCard(byte Code[]) {
     @param Code[] The UID of the RFID Code to Check.
     @return true if a Card Matches (bool).
 */
-bool Card::CardCheck(byte Code[]) {
+bool Card::CardCheck(byte Code[])
+{
   const uint8_t nbr = CardNumber();
   byte CodeRead[_byteNumber];
 
-  for (uint8_t i = 0; i < nbr; i++) {
+  for (uint8_t i = 0; i < nbr; i++)
+  {
     uint8_t match = 0;
 
     Code::Read(OFFSET(i), CodeRead, _byteNumber);
-    for (uint8_t n = 0; n < _byteNumber; n++) {
+    for (uint8_t n = 0; n < _byteNumber; n++)
+    {
       if (Code[n] == CodeRead[n])
         match++;
     }
 
-    if (match == _byteNumber) {
+    if (match == _byteNumber)
+    {
       return true;
     }
   }

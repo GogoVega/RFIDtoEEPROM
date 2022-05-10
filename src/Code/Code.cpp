@@ -32,11 +32,15 @@
 */
 void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
 {
-  if (_local) {
-    for (uint8_t n = 0; n < byteNumber; n++) {
+  if (_local)
+  {
+    for (uint8_t n = 0; n < byteNumber; n++)
+    {
       Code[n] = EEPROM.read(address + n);
     }
-  } else {
+  }
+  else
+  {
     Wire.beginTransmission(_eepromAddr);
     Wire.write(address);
     Wire.endTransmission();
@@ -44,8 +48,10 @@ void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
 
     delayMicroseconds(500);
 
-    if (Wire.available()) {
-      for (uint8_t i = 0; i < byteNumber; i++) {
+    if (Wire.available())
+    {
+      for (uint8_t i = 0; i < byteNumber; i++)
+      {
         Code[i] = Wire.read();
       }
     }
@@ -61,11 +67,15 @@ void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
 */
 void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
 {
-  if (_local) {
-    for (uint8_t n = 0; n < byteNumber; n++) {
+  if (_local)
+  {
+    for (uint8_t n = 0; n < byteNumber; n++)
+    {
       EEPROM.update((address + n), Code[n]);
     }
-  } else {
+  }
+  else
+  {
     Wire.beginTransmission(_eepromAddr);
     Wire.write(address);
     Wire.write(Code, byteNumber);

@@ -36,7 +36,8 @@ class RFIDtoEEPROM_I2C : public Card
 {
   public:
     //EEPROM size in kbits.
-    enum eeprom_size_t {
+    enum eeprom_size_t
+    {
       kbits_2 = 2,
       kbits_4 = 4,
       kbits_8 = 8,
@@ -50,7 +51,8 @@ class RFIDtoEEPROM_I2C : public Card
       kbits_2048 = 2048
     };
     // I2C Clock Frequencies
-    enum twiClockFreq_t {
+    enum twiClockFreq_t
+    {
       twiClock100kHz = 100000,
       twiClock400kHz = 400000
     };
