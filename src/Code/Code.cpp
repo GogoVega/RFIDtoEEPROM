@@ -33,19 +33,19 @@
 */
 void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
 {
-  Wire.beginTransmission(_eepromAddr);
-  Wire.write(address);
+  while (isBusy())
+    delayMicroseconds(100);
+
+  Wire.beginTransmission((uint8_t) _eepromAddr);
+  if (_twoAddress) Wire.write((uint8_t) (address >> 8));
+  Wire.write((uint8_t) (address & 0xFF));
   Wire.endTransmission();
-  Wire.requestFrom(_eepromAddr, byteNumber);
+  Wire.requestFrom((uint8_t) _eepromAddr, (uint8_t) byteNumber);
 
-  delayMicroseconds(500);
-
-  if (Wire.available())
+  uint8_t i = 0;
+  while (Wire.available())
   {
-    for (uint8_t i = 0; i < byteNumber; i++)
-    {
-      Code[i] = Wire.read();
-    }
+    Code[i++] = Wire.read();
   }
 }
 
@@ -58,10 +58,16 @@ void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
 */
 void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
 {
-  Wire.beginTransmission(_eepromAddr);
-  Wire.write(address);
-  Wire.write(Code, byteNumber);
+  while (isBusy())
+    delayMicroseconds(100);
+
+  Wire.beginTransmission((uint8_t) _eepromAddr);
+  if (_twoAddress) Wire.write((uint8_t) (address >> 8));
+  Wire.write((uint8_t) (address & 0xFF));
+  Wire.write(Code, (uint8_t) byteNumber);
   Wire.endTransmission();
+
+  delayMicroseconds(500);
 }
 
 
@@ -71,7 +77,7 @@ void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
 */
 uint16_t Code::Length()
 {
-  return _eepromSize;
+  return (_eepromSize * 128);
 }
 
 #else
@@ -95,19 +101,19 @@ void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
   }
   else
   {
-    Wire.beginTransmission(_eepromAddr);
-    Wire.write(address);
+    while (isBusy())
+      delayMicroseconds(100);
+
+    Wire.beginTransmission((uint8_t) _eepromAddr);
+    if (_twoAddress) Wire.write((uint8_t) (address >> 8));
+    Wire.write((uint8_t) (address & 0xFF));
     Wire.endTransmission();
-    Wire.requestFrom(_eepromAddr, byteNumber);
+    Wire.requestFrom((uint8_t) _eepromAddr, (uint8_t) byteNumber);
 
-    delayMicroseconds(500);
-
-    if (Wire.available())
+    uint8_t i = 0;
+    while (Wire.available())
     {
-      for (uint8_t i = 0; i < byteNumber; i++)
-      {
-        Code[i] = Wire.read();
-      }
+      Code[i++] = Wire.read();
     }
   }
 }
@@ -134,10 +140,16 @@ void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
   }
   else
   {
-    Wire.beginTransmission(_eepromAddr);
-    Wire.write(address);
-    Wire.write(Code, byteNumber);
+    while (isBusy())
+      delayMicroseconds(100);
+
+    Wire.beginTransmission((uint8_t) _eepromAddr);
+    if (_twoAddress) Wire.write((uint8_t) (address >> 8));
+    Wire.write((uint8_t) (address & 0xFF));
+    Wire.write(Code, (uint8_t) byteNumber);
     Wire.endTransmission();
+
+    delayMicroseconds(500);
   }
 }
 
@@ -151,7 +163,7 @@ uint16_t Code::Length()
   if (_local)
     return EEPROM.length();
 
-  return _eepromSize;
+  return (_eepromSize * 128);
 }
 
 #endif
@@ -165,8 +177,8 @@ uint8_t Code::Read(uint8_t address)
 {
   uint8_t data;
 
-  Code::Read(address, &data, 1);
-  return data;
+  Read(address, &data, 1);
+  return (data);
 }
 
 
@@ -177,5 +189,20 @@ uint8_t Code::Read(uint8_t address)
 */
 void Code::Write(uint8_t address, uint8_t data)
 {
-  Write(address, &data, 1);
+  if (Read(address) != data)
+    Write(address, &data, 1);
+}
+
+
+/*!
+    @brief Check if device is not answering (currently writing).
+    @return Returns true if writing in progress (bool).
+*/
+bool Code::isBusy()
+{
+  Wire.beginTransmission((uint8_t) _eepromAddr);
+  if (!Wire.endTransmission())
+    return (false);
+
+  return (true);
 }

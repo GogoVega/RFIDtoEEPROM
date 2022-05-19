@@ -35,8 +35,12 @@ class Code
     uint16_t Length();
 
     bool _local = true;
+    bool _twoAddress;
     uint8_t _eepromAddr;
     uint16_t _eepromSize;
+
+  private:
+    bool isBusy(void);
 };
 
 #endif  // Code_h

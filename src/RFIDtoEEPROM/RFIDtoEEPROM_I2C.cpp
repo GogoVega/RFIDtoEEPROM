@@ -34,6 +34,7 @@ RFIDtoEEPROM_I2C::RFIDtoEEPROM_I2C(eeprom_size_t eepromSize, uint8_t address, ui
   _local = false;
   _eepromAddr = address;
   _eepromSize = eepromSize;
+  _twoAddress = eepromSize > kbits_16 ? true : false;
 }
 
 
@@ -46,6 +47,7 @@ void RFIDtoEEPROM_I2C::begin(twiClockFreq_t twiFreq)
   Wire.begin();
   Wire.setClock(twiFreq);
   Wire.beginTransmission(_eepromAddr);
+  if (_twoAddress) Wire.write(0);
   Wire.write(0);
   Wire.endTransmission();
 }

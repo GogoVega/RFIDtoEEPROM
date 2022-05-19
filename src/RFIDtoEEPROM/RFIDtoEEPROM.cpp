@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <RFIDtoEEPROM.h>
-
 #if !defined(ARDUINO_ARCH_RP2040)
+
+#include <RFIDtoEEPROM.h>
 
 /*!
     @brief Constructor for RFIDtoEEPROM library.
