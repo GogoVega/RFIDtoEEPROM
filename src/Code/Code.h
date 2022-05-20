@@ -28,11 +28,11 @@
 class Code
 {
   protected:
-    void Read(uint8_t address, byte* Code, uint8_t byteNumber);
-    uint8_t Read(uint8_t address);
-    void Write(uint8_t address, byte* Code, uint8_t byteNumber);
-    void Write(uint8_t address, uint8_t data);
-    uint16_t Length();
+    void read(uint8_t address, byte *Code, uint8_t byteNumber);
+    uint8_t read(uint8_t address);
+    void write(uint8_t address, byte *Code, uint8_t byteNumber);
+    void write(uint8_t address, uint8_t data);
+    uint16_t length();
 
     bool _local = true;
     bool _twoAddress;
@@ -43,4 +43,4 @@ class Code
     bool isBusy(void);
 };
 
-#endif  // Code_h
+#endif // _Code_h

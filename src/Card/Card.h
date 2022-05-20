@@ -30,18 +30,32 @@ class Card : protected Code
   public:
     Card(uint8_t byteNumber = 4);
 
-    bool CardCheck(byte Code[]);
-    bool SaveCard(byte Code[]);
+    template <typename T>
+    bool CardCheck(T &t)
+    {
+      byte *Code = (byte *)&t;
+      return CardCheck(Code, sizeof(T));
+    }
+
+    template <typename T>
+    bool SaveCard(T &t)
+    {
+      byte *Code = (byte *)&t;
+      return SaveCard(Code, sizeof(T));
+    }
+
     void ClearCardNumber(void);
     void EraseAllCards(void);
     uint8_t CardNumber(void);
     uint8_t MaxCards(void);
 
   private:
-    bool WriteCheck(uint8_t nbr, byte* Code);
+    bool CardCheck(byte *Code, uint8_t size);
+    bool SaveCard(byte *Code, uint8_t size);
+    bool WriteCheck(byte *Code, uint8_t nbr);
     void CardRestoration(uint8_t nbr);
     uint8_t _byteNumber;
     uint8_t _maxCards;
 };
 
-#endif  // Card_h
+#endif // _Card_h

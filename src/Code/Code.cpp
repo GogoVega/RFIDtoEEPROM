@@ -31,16 +31,16 @@
     @param Code Variable that will be modified by reading.
     @param byteNumber The Number of byte to read.
 */
-void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
+void Code::read(uint8_t address, byte *Code, uint8_t byteNumber)
 {
   while (isBusy())
     delayMicroseconds(100);
 
-  Wire.beginTransmission((uint8_t) _eepromAddr);
-  if (_twoAddress) Wire.write((uint8_t) (address >> 8));
-  Wire.write((uint8_t) (address & 0xFF));
+  Wire.beginTransmission((uint8_t)_eepromAddr);
+  if (_twoAddress) Wire.write((uint8_t)(address >> 8));
+  Wire.write((uint8_t)(address & 0xFF));
   Wire.endTransmission();
-  Wire.requestFrom((uint8_t) _eepromAddr, (uint8_t) byteNumber);
+  Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteNumber);
 
   uint8_t i = 0;
   while (Wire.available())
@@ -49,27 +49,25 @@ void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
   }
 }
 
-
 /*!
     @brief Write Code to EEPROM.
     @param address Departure address for writing.
     @param Code Code to write.
     @param byteNumber The Number of byte to write.
 */
-void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
+void Code::write(uint8_t address, byte *Code, uint8_t byteNumber)
 {
   while (isBusy())
     delayMicroseconds(100);
 
-  Wire.beginTransmission((uint8_t) _eepromAddr);
-  if (_twoAddress) Wire.write((uint8_t) (address >> 8));
-  Wire.write((uint8_t) (address & 0xFF));
-  Wire.write(Code, (uint8_t) byteNumber);
+  Wire.beginTransmission((uint8_t)_eepromAddr);
+  if (_twoAddress) Wire.write((uint8_t)(address >> 8));
+  Wire.write((uint8_t)(address & 0xFF));
+  Wire.write(Code, (uint8_t)byteNumber);
   Wire.endTransmission();
 
   delayMicroseconds(500);
 }
-
 
 /*!
     @brief Returns the Number of Cells in the EEPROM.
@@ -90,7 +88,7 @@ uint16_t Code::Length()
     @param Code Variable that will be modified by reading.
     @param byteNumber The Number of byte to read.
 */
-void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
+void Code::read(uint8_t address, byte *Code, uint8_t byteNumber)
 {
   if (_local)
   {
@@ -104,11 +102,11 @@ void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
     while (isBusy())
       delayMicroseconds(100);
 
-    Wire.beginTransmission((uint8_t) _eepromAddr);
-    if (_twoAddress) Wire.write((uint8_t) (address >> 8));
-    Wire.write((uint8_t) (address & 0xFF));
+    Wire.beginTransmission((uint8_t)_eepromAddr);
+    if (_twoAddress) Wire.write((uint8_t)(address >> 8));
+    Wire.write((uint8_t)(address & 0xFF));
     Wire.endTransmission();
-    Wire.requestFrom((uint8_t) _eepromAddr, (uint8_t) byteNumber);
+    Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteNumber);
 
     uint8_t i = 0;
     while (Wire.available())
@@ -118,24 +116,23 @@ void Code::Read(uint8_t address, byte* Code, uint8_t byteNumber)
   }
 }
 
-
 /*!
     @brief Write Code to EEPROM.
     @param address Departure address for writing.
     @param Code Code to write.
     @param byteNumber The Number of byte to write.
 */
-void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
+void Code::write(uint8_t address, byte *Code, uint8_t byteNumber)
 {
   if (_local)
   {
     for (uint8_t n = 0; n < byteNumber; n++)
     {
-      #if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266) || defined(ESP32)
       EEPROM.write((address + n), Code[n]);
-      #elif defined(__AVR__)
+#elif defined(__AVR__)
       EEPROM.update((address + n), Code[n]);
-      #endif
+#endif
     }
   }
   else
@@ -143,22 +140,21 @@ void Code::Write(uint8_t address, byte* Code, uint8_t byteNumber)
     while (isBusy())
       delayMicroseconds(100);
 
-    Wire.beginTransmission((uint8_t) _eepromAddr);
-    if (_twoAddress) Wire.write((uint8_t) (address >> 8));
-    Wire.write((uint8_t) (address & 0xFF));
-    Wire.write(Code, (uint8_t) byteNumber);
+    Wire.beginTransmission((uint8_t)_eepromAddr);
+    if (_twoAddress) Wire.write((uint8_t)(address >> 8));
+    Wire.write((uint8_t)(address & 0xFF));
+    Wire.write(Code, (uint8_t)byteNumber);
     Wire.endTransmission();
 
     delayMicroseconds(500);
   }
 }
 
-
 /*!
     @brief Returns the Number of Cells in the EEPROM.
     @return the Number of Cells in the EEPROM (uint16_t).
 */
-uint16_t Code::Length()
+uint16_t Code::length()
 {
   if (_local)
     return EEPROM.length();
@@ -173,26 +169,24 @@ uint16_t Code::Length()
     @param address Address for reading.
     @return the byte read (uint8_t).
 */
-uint8_t Code::Read(uint8_t address)
+uint8_t Code::read(uint8_t address)
 {
   uint8_t data;
 
-  Read(address, &data, 1);
+  read(address, &data, 1);
   return (data);
 }
-
 
 /*!
     @brief Write byte to EEPROM.
     @param address Address for writing.
     @param data the byte to write.
 */
-void Code::Write(uint8_t address, uint8_t data)
+void Code::write(uint8_t address, uint8_t data)
 {
-  if (Read(address) != data)
-    Write(address, &data, 1);
+  if (read(address) != data)
+    write(address, &data, 1);
 }
-
 
 /*!
     @brief Check if device is not answering (currently writing).
@@ -200,7 +194,7 @@ void Code::Write(uint8_t address, uint8_t data)
 */
 bool Code::isBusy()
 {
-  Wire.beginTransmission((uint8_t) _eepromAddr);
+  Wire.beginTransmission((uint8_t)_eepromAddr);
   if (!Wire.endTransmission())
     return (false);
 

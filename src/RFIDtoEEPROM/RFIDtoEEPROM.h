@@ -60,7 +60,7 @@ class RFIDtoEEPROM_I2C : public Card
       twiClock400kHz = 400000
     };
 
-    RFIDtoEEPROM_I2C(eeprom_size_t eepromSize = kbits_1024, uint8_t address = 0x50, uint8_t byteNumber = 4);
+    RFIDtoEEPROM_I2C(eeprom_size_t eepromSize = kbits_256, uint8_t address = 0x50, uint8_t byteNumber = 4);
 
     void begin(twiClockFreq_t twiFreq = twiClock100kHz);
 };
