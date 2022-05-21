@@ -37,7 +37,6 @@ RFIDtoEEPROM_I2C::RFIDtoEEPROM_I2C(eeprom_size_t eepromSize, uint8_t address, ui
   _twoAddress = eepromSize > kbits_16 ? true : false;
 }
 
-
 /*!
     @brief Set the I2C communication frequency.
     @param twiFreq Frequency.

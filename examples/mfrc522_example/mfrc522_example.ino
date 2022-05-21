@@ -22,11 +22,10 @@
 *
 * More pin layouts for other boards can be found here: https://github.com/miguelbalboa/rfid#pin-layout
 *
-*
 * Warning: you must use the same number of bytes in your functions as defined
-* in the constructor!
+* in the Constructor and less than or equal to 16!
 *
-* Create april 2022
+* Create April 2022
 *
 * Copyright (c) 2022 Gauthier Dandele
 *
@@ -42,8 +41,11 @@
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-// By default, the Number of Bytes of ID = 4
+// By default, the Number of Bytes in the UID = 4
 RFIDtoEEPROM myCard;
+
+// Uncomment to use I2C EEPROM (EEPROMSize, I2CAddress, ByteNumber)
+// RFIDtoEEPROM_I2C myCard(RFIDtoEEPROM_I2C::kbits_256, 0x50, NUMBYTES);
 
 byte Code[4];
 
@@ -52,6 +54,10 @@ void setup() {
 
   SPI.begin();
   rfid.PCD_Init();
+
+  // Uncomment to use I2C EEPROM
+  // Wire.begin();
+  // myCard.begin();
 
   // Reset the Number of Cards
   // myCard.ClearCardNumber();

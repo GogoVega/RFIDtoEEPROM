@@ -12,9 +12,9 @@
 * - Erase all Cards.
 *
 * Warning: you must use the same number of bytes in your functions as defined
-* in the constructor!
+* in the Constructor and less than or equal to 16!
 *
-* Create april 2022
+* Create April 2022
 *
 * Copyright (c) 2022 Gauthier Dandele
 *
@@ -24,11 +24,19 @@
 #include <RFIDtoEEPROM.h>
 
 #define NUMBYTES 4
-// By default, the Number of Bytes of ID = 4
+
+// By default, the Number of Bytes in the UID = 4
 RFIDtoEEPROM myCard(NUMBYTES);
+
+// Uncomment to use I2C EEPROM (EEPROMSize, I2CAddress, ByteNumber)
+// RFIDtoEEPROM_I2C myCard(RFIDtoEEPROM_I2C::kbits_256, 0x50, NUMBYTES);
 
 void setup() {
   Serial.begin(9600);
+
+  // Uncomment to use I2C EEPROM
+  // Wire.begin();
+  // myCard.begin();
 
   // Erase all Cards
   // myCard.EraseAllCards();
