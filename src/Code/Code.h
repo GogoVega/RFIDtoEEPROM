@@ -32,7 +32,7 @@ class Code
     uint8_t read(uint8_t address);
     void write(uint8_t address, byte *Code, uint8_t byteNumber);
     void write(uint8_t address, uint8_t data);
-    uint16_t length();
+    uint32_t length();
 
     bool _local = true;
     bool _twoAddress;

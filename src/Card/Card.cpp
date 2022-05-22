@@ -72,7 +72,7 @@ void Card::ClearCardNumber()
 */
 void Card::EraseAllCards()
 {
-  for (uint16_t n = 0; n < Code::length(); n++)
+  for (uint32_t n = 0; n < Code::length(); n++)
   {
     Code::write(n, 0);
   }

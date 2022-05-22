@@ -71,9 +71,9 @@ void Code::write(uint8_t address, byte *Code, uint8_t byteNumber)
 
 /*!
     @brief Returns the Number of Cells in the EEPROM.
-    @return the Number of Cells in the EEPROM (uint16_t).
+    @return the Number of Cells in the EEPROM (uint32_t).
 */
-uint16_t Code::Length()
+uint32_t Code::length()
 {
   return (_eepromSize * 128);
 }
@@ -152,9 +152,9 @@ void Code::write(uint8_t address, byte *Code, uint8_t byteNumber)
 
 /*!
     @brief Returns the Number of Cells in the EEPROM.
-    @return the Number of Cells in the EEPROM (uint16_t).
+    @return the Number of Cells in the EEPROM (uint32_t).
 */
-uint16_t Code::length()
+uint32_t Code::length()
 {
   if (_local)
     return EEPROM.length();
