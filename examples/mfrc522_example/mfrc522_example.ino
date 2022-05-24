@@ -23,7 +23,7 @@
 * More pin layouts for other boards can be found here: https://github.com/miguelbalboa/rfid#pin-layout
 *
 * Warning: you must use the same number of bytes in your functions as defined
-* in the Constructor and less than or equal to 16!
+* in the Constructor!
 *
 * Create April 2022
 *

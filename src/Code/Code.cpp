@@ -23,6 +23,14 @@
 #include <RFIDtoEEPROM.h>
 #include <Wire.h>
 
+#ifndef BUFFER_LENGTH
+#define BUFFER_LENGTH 32
+#endif
+
+#ifndef min
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+
 #if defined(ARDUINO_ARCH_RP2040)
 
 /*!
@@ -31,21 +39,35 @@
     @param Code Variable that will be modified by reading.
     @param byteNumber The Number of byte to read.
 */
-void Code::read(uint8_t address, byte *Code, uint8_t byteNumber)
+void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
 {
-  while (isBusy())
-    delayMicroseconds(100);
+  uint8_t rxStatus = 0;
 
-  Wire.beginTransmission((uint8_t)_eepromAddr);
-  if (_twoAddress) Wire.write((uint8_t)(address >> 8));
-  Wire.write((uint8_t)(address & 0xFF));
-  Wire.endTransmission();
-  Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteNumber);
-
-  uint8_t i = 0;
-  while (Wire.available())
+  while (byteNumber > 0)
   {
-    Code[i++] = Wire.read();
+    uint8_t bytePage = _pageSize - ( address & (_pageSize - 1) );
+    uint8_t byteRead = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
+
+    while (isBusy())
+      delayMicroseconds(100);
+
+    Wire.beginTransmission((uint8_t)_eepromAddr);
+    if (_twoAddress) Wire.write((uint8_t)(address >> 8)); // MSB
+    Wire.write((uint8_t)(address & 0xFF));  // LSB
+    rxStatus = Wire.endTransmission();
+    if (rxStatus != 0) break; // Read error
+
+    Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteRead);
+
+    uint8_t i = 0;
+    while (Wire.available())
+    {
+      Code[i++] = Wire.read();
+    }
+
+    address += byteRead;     // Increment the EEPROM address
+    Code += byteRead;        // Increment the input data pointer
+    byteNumber -= byteRead;  // Decrement the number of bytes left to read
   }
 }
 
@@ -55,18 +77,31 @@ void Code::read(uint8_t address, byte *Code, uint8_t byteNumber)
     @param Code Code to write.
     @param byteNumber The Number of byte to write.
 */
-void Code::write(uint8_t address, byte *Code, uint8_t byteNumber)
+void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
 {
-  while (isBusy())
-    delayMicroseconds(100);
+  uint8_t txStatus = 0;
 
-  Wire.beginTransmission((uint8_t)_eepromAddr);
-  if (_twoAddress) Wire.write((uint8_t)(address >> 8));
-  Wire.write((uint8_t)(address & 0xFF));
-  Wire.write(Code, (uint8_t)byteNumber);
-  Wire.endTransmission();
+  while (byteNumber > 0)
+  {
+    uint8_t bytePage = _pageSize - ( address & (_pageSize - 1) );
+    uint8_t byteWrite = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
 
-  delayMicroseconds(500);
+    while (isBusy())
+      delayMicroseconds(100);
+
+    Wire.beginTransmission((uint8_t)_eepromAddr);
+    if (_twoAddress) Wire.write((uint8_t)(address >> 8)); // MSB
+    Wire.write((uint8_t)(address & 0xFF));  // LSB
+    Wire.write(Code, (uint8_t)byteWrite);
+    txStatus = Wire.endTransmission();
+    if (txStatus != 0) break; // Write error
+
+    address += byteWrite;     // Increment the EEPROM address
+    Code += byteWrite;        // Increment the input data pointer
+    byteNumber -= byteWrite;  // Decrement the number of bytes left to write
+
+    delayMicroseconds(500);
+  }
 }
 
 /*!
@@ -88,7 +123,7 @@ uint32_t Code::length()
     @param Code Variable that will be modified by reading.
     @param byteNumber The Number of byte to read.
 */
-void Code::read(uint8_t address, byte *Code, uint8_t byteNumber)
+void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
 {
   if (_local)
   {
@@ -99,19 +134,33 @@ void Code::read(uint8_t address, byte *Code, uint8_t byteNumber)
   }
   else
   {
-    while (isBusy())
-      delayMicroseconds(100);
+    uint8_t rxStatus = 0;
 
-    Wire.beginTransmission((uint8_t)_eepromAddr);
-    if (_twoAddress) Wire.write((uint8_t)(address >> 8));
-    Wire.write((uint8_t)(address & 0xFF));
-    Wire.endTransmission();
-    Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteNumber);
-
-    uint8_t i = 0;
-    while (Wire.available())
+    while (byteNumber > 0)
     {
-      Code[i++] = Wire.read();
+      uint8_t bytePage = _pageSize - ( address & (_pageSize - 1) );
+      uint8_t byteRead = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
+
+      while (isBusy())
+        delayMicroseconds(100);
+
+      Wire.beginTransmission((uint8_t)_eepromAddr);
+      if (_twoAddress) Wire.write((uint8_t)(address >> 8)); // MSB
+      Wire.write((uint8_t)(address & 0xFF));  // LSB
+      rxStatus = Wire.endTransmission();
+      if (rxStatus != 0) break; // Read error
+
+      Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteRead);
+
+      uint8_t i = 0;
+      while (Wire.available())
+      {
+        Code[i++] = Wire.read();
+      }
+
+      address += byteRead;     // Increment the EEPROM address
+      Code += byteRead;        // Increment the input data pointer
+      byteNumber -= byteRead;  // Decrement the number of bytes left to read
     }
   }
 }
@@ -122,7 +171,7 @@ void Code::read(uint8_t address, byte *Code, uint8_t byteNumber)
     @param Code Code to write.
     @param byteNumber The Number of byte to write.
 */
-void Code::write(uint8_t address, byte *Code, uint8_t byteNumber)
+void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
 {
   if (_local)
   {
@@ -137,16 +186,29 @@ void Code::write(uint8_t address, byte *Code, uint8_t byteNumber)
   }
   else
   {
-    while (isBusy())
-      delayMicroseconds(100);
+    uint8_t txStatus = 0;
 
-    Wire.beginTransmission((uint8_t)_eepromAddr);
-    if (_twoAddress) Wire.write((uint8_t)(address >> 8));
-    Wire.write((uint8_t)(address & 0xFF));
-    Wire.write(Code, (uint8_t)byteNumber);
-    Wire.endTransmission();
+    while (byteNumber > 0)
+    {
+      uint8_t bytePage = _pageSize - ( address & (_pageSize - 1) );
+      uint8_t byteWrite = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
 
-    delayMicroseconds(500);
+      while (isBusy())
+        delayMicroseconds(100);
+
+      Wire.beginTransmission((uint8_t)_eepromAddr);
+      if (_twoAddress) Wire.write((uint8_t)(address >> 8)); // MSB
+      Wire.write((uint8_t)(address & 0xFF));  // LSB
+      Wire.write(Code, (uint8_t)byteWrite);
+      txStatus = Wire.endTransmission();
+      if (txStatus != 0) break; // Write error
+
+      address += byteWrite;     // Increment the EEPROM address
+      Code += byteWrite;        // Increment the input data pointer
+      byteNumber -= byteWrite;  // Decrement the number of bytes left to write
+
+      delayMicroseconds(500);
+    }
   }
 }
 
@@ -169,7 +231,7 @@ uint32_t Code::length()
     @param address Address for reading.
     @return the byte read (uint8_t).
 */
-uint8_t Code::read(uint8_t address)
+uint8_t Code::read(uint32_t address)
 {
   uint8_t data;
 
@@ -182,7 +244,7 @@ uint8_t Code::read(uint8_t address)
     @param address Address for writing.
     @param data the byte to write.
 */
-void Code::write(uint8_t address, uint8_t data)
+void Code::write(uint32_t address, uint8_t data)
 {
   if (read(address) != data)
     write(address, &data, 1);
@@ -190,7 +252,7 @@ void Code::write(uint8_t address, uint8_t data)
 
 /*!
     @brief Check if device is not answering (currently writing).
-    @return Returns true if writing in progress (bool).
+    @return true if writing in progress (bool).
 */
 bool Code::isBusy()
 {
@@ -199,4 +261,23 @@ bool Code::isBusy()
     return (false);
 
   return (true);
+}
+
+/*!
+    @brief Returns the page size of EEPROM.
+    @param eepromSize EEPROM size in Kbits.
+    @return the page size of EEPROM (uint8_t).
+*/
+uint8_t Code::pageSize(uint32_t eepromSize)
+{
+  if (eepromSize < RFIDtoEEPROM_I2C::kbits_4)
+    return 8;
+  else if (eepromSize < RFIDtoEEPROM_I2C::kbits_32)
+    return 16;
+  else if (eepromSize < RFIDtoEEPROM_I2C::kbits_128)
+    return 32;
+  else if (eepromSize < RFIDtoEEPROM_I2C::kbits_512)
+    return 64;
+
+  return 128;
 }

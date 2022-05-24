@@ -56,7 +56,6 @@ class Card : protected Code
     void CardRestoration(uint8_t nbr);
     uint8_t _byteNumber;
     uint8_t _maxCards;
-    uint8_t _pageSize = 16;
 };
 
 #endif // _Card_h

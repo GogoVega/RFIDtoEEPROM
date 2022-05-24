@@ -12,7 +12,7 @@
 * - Erase all Cards.
 *
 * Warning: you must use the same number of bytes in your functions as defined
-* in the Constructor and less than or equal to 16!
+* in the Constructor!
 *
 * Create April 2022
 *

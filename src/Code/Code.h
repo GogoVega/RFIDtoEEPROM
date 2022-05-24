@@ -28,16 +28,18 @@
 class Code
 {
   protected:
-    void read(uint8_t address, byte *Code, uint8_t byteNumber);
-    uint8_t read(uint8_t address);
-    void write(uint8_t address, byte *Code, uint8_t byteNumber);
-    void write(uint8_t address, uint8_t data);
-    uint32_t length();
+    void read(uint32_t address, byte *Code, uint8_t byteNumber);
+    uint8_t read(uint32_t address);
+    void write(uint32_t address, byte *Code, uint8_t byteNumber);
+    void write(uint32_t address, uint8_t data);
+    uint8_t pageSize(uint32_t eepromSize);
+    uint32_t length(void);
 
-    bool _local = true;
+    bool _local;
     bool _twoAddress;
     uint8_t _eepromAddr;
-    uint16_t _eepromSize;
+    uint8_t _pageSize;
+    uint32_t _eepromSize;
 
   private:
     bool isBusy(void);

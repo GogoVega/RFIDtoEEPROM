@@ -18,7 +18,7 @@ Library to write an RFID Code in the [EEPROM](https://docs.arduino.cc/learn/buil
 
 This library is used for saving an RFID Code to your Arduino's EEPROM or I2C EEPROM rather than your Code to avoid **showing your RFID Code**. To then check if the Code corresponds to a Code already registered.
 
-**Warning:** you must use the same number of bytes in your functions as defined in the Constructor and less than or equal to 16!
+**Warning:** you must use the same number of bytes in your functions as defined in the Constructor!
 
 ## How To Use
 
@@ -58,6 +58,8 @@ void begin(twiClockFreq_t twiFreq);
 Use one of the enumerations below to set EEPROM Size:
 ```
 {
+  RFIDtoEEPROM_I2C::kbits_1,
+  RFIDtoEEPROM_I2C::kbits_2,
   RFIDtoEEPROM_I2C::kbits_4,
   RFIDtoEEPROM_I2C::kbits_8,
   RFIDtoEEPROM_I2C::kbits_16,
@@ -100,13 +102,11 @@ This library contains several functions:
 
 ## Future Features
 
-- Support for small I2C EEPROMs (1 - 2Kbits).
 - Increase the number of recordable Cards (currently set to 255).
 - Improve error handling.
 
 ## Limitations
 
-- The Number of Bytes in the UID must be less than or equal to 16!
 - The Number of recordable Cards is fixed at 255.
 
 ## License
