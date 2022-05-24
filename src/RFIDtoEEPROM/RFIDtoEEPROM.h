@@ -41,7 +41,6 @@ class RFIDtoEEPROM_I2C : public Card
     //EEPROM size in kbits.
     enum eeprom_size_t
     {
-      kbits_2 = 2,
       kbits_4 = 4,
       kbits_8 = 8,
       kbits_16 = 16,

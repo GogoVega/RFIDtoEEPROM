@@ -72,9 +72,11 @@ void Card::ClearCardNumber()
 */
 void Card::EraseAllCards()
 {
-  for (uint32_t n = 0; n < Code::length(); n++)
+  byte Code[_pageSize] = {};
+
+  for (uint32_t n = 0; n < (Code::length() / _pageSize); n++)
   {
-    Code::write(n, 0);
+    Code::write((n * _pageSize), Code, _pageSize);
   }
 }
 
@@ -86,7 +88,7 @@ void Card::CardRestoration(uint8_t nbr)
 {
   /* Uncomment if you want to reset the Card
   byte Code[_byteNumber] = {};
-  Code::Write(OFFSET(nbr), Code, _byteNumber);
+  Code::write(OFFSET(nbr), Code, _byteNumber);
   */
 
   Code::write(0, nbr);
@@ -125,7 +127,7 @@ bool Card::SaveCard(uint8_t *Code, uint8_t size)
   const uint8_t nbr = CardNumber();
 
   // if size different from Constructor or better than 16
-  if ((size != _byteNumber) || (size > 16))
+  if ((size != _byteNumber) || (size > _pageSize))
     return (NULL);
 
   // if Number of Cards over limit!
@@ -160,7 +162,7 @@ bool Card::CardCheck(uint8_t *Code, uint8_t size)
   byte CodeRead[_byteNumber];
 
   // if size different from Constructor or better than 16
-  if ((size != _byteNumber) || (size > 16))
+  if ((size != _byteNumber) || (size > _pageSize))
     return (NULL);
 
   for (uint8_t i = 0; i < nbr; i++)

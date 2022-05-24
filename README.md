@@ -29,7 +29,7 @@ Go to the Libraries Manager on [PlatformIO](https://platformio.org/platformio-id
 Or use `platformIO Core CLI` and paste the following command:
 
 ```bash
-pio lib install "gogovega/RFID to EEPROM@^1.1.0"
+pio pkg install --library "gogovega/RFID to EEPROM@^1.1.0"
 ```
 
 ## How It Works
@@ -58,7 +58,6 @@ void begin(twiClockFreq_t twiFreq);
 Use one of the enumerations below to set EEPROM Size:
 ```
 {
-  RFIDtoEEPROM_I2C::kbits_2,
   RFIDtoEEPROM_I2C::kbits_4,
   RFIDtoEEPROM_I2C::kbits_8,
   RFIDtoEEPROM_I2C::kbits_16,
@@ -101,6 +100,7 @@ This library contains several functions:
 
 ## Future Features
 
+- Support for small I2C EEPROMs (1 - 2Kbits).
 - Increase the number of recordable Cards (currently set to 255).
 - Improve error handling.
 
