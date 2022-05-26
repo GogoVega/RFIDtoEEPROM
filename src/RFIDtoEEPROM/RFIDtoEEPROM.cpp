@@ -33,4 +33,20 @@ RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) : Card(byteNumber)
   _local = true;
 }
 
-#endif
+#if defined(ESP32) || defined(ESP8266)
+
+#include <EEPROM.h>
+
+/*!
+    @brief Set the EEPROM emulation size.
+    @param eepromSize The EEPROM size in Byte!!!
+*/
+void RFIDtoEEPROM::begin(uint32_t eepromSize)
+{
+  EEPROM.begin(eepromSize);
+  _maxCards = min(((length() - 1) / _byteNumber), 255);
+}
+
+#endif // ESP32 || ESP8266
+
+#endif // !ARDUINO_ARCH_RP2040

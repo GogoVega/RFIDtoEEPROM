@@ -38,11 +38,12 @@
 #define SS_PIN 6
 #define RST_PIN 7
 #define BUTTONPIN 8
+#define NUMBYTES 4
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 
 // By default, the Number of Bytes in the UID = 4
-RFIDtoEEPROM myCard;
+RFIDtoEEPROM myCard(NUMBYTES);
 
 // Uncomment to use I2C EEPROM (EEPROMSize, I2CAddress, ByteNumber)
 // RFIDtoEEPROM_I2C myCard(RFIDtoEEPROM_I2C::kbits_256, 0x50, NUMBYTES);
@@ -54,6 +55,10 @@ void setup() {
 
   SPI.begin();
   rfid.PCD_Init();
+
+  // Uncomment to use the emulated EEPROM of the ESP32 or ESP8266
+  // Set the desired size in bytes!
+  // myCard.begin(16);
 
   // Uncomment to use I2C EEPROM
   // Wire.begin();
@@ -79,10 +84,11 @@ void loop() {
       Serial.println(myCard.CardNumber());
 
       Serial.print("UID Cards is: ");
-      Serial.print(Code[0], HEX);
-      Serial.print(Code[1], HEX);
-      Serial.print(Code[2], HEX);
-      Serial.println(Code[3], HEX);
+      for (int i = 0; i < NUMBYTES; i++) {
+        Serial.print(Code[i], HEX);
+      }
+
+      Serial.println();
 
       if (digitalRead(BUTTONPIN)) {
         Serial.println("Registration Request");

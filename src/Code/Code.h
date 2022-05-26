@@ -38,7 +38,7 @@ class Code
     bool _local;
     bool _twoAddress;
     uint8_t _eepromAddr;
-    uint8_t _pageSize;
+    uint8_t _pageSize = 8;
     uint32_t _eepromSize;
 
   private:

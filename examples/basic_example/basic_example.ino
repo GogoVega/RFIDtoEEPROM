@@ -34,6 +34,10 @@ RFIDtoEEPROM myCard(NUMBYTES);
 void setup() {
   Serial.begin(9600);
 
+  // Uncomment to use the emulated EEPROM of the ESP32 or ESP8266
+  // Set the desired size in bytes!
+  // myCard.begin(8);
+
   // Uncomment to use I2C EEPROM
   // Wire.begin();
   // myCard.begin();
@@ -55,10 +59,11 @@ void setup() {
   // Register a new Card
   byte Code[4] = {217, 90, 119, 158};
   Serial.print("UID Cards is: ");
-  Serial.print(Code[0], HEX);
-  Serial.print(Code[1], HEX);
-  Serial.print(Code[2], HEX);
-  Serial.println(Code[3], HEX);
+  for (int i = 0; i < NUMBYTES; i++) {
+    Serial.print(Code[i], HEX);
+  }
+
+  Serial.println();
 
   Serial.println("Card registration...");
 

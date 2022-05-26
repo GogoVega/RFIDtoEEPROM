@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 #include <RFIDtoEEPROM.h>
-#include <Wire.h>
 
 /*!
     @brief Constructor for RFIDtoEEPROM_I2C library.

@@ -22,10 +22,6 @@
 
 #include <RFIDtoEEPROM.h>
 
-#ifndef min
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#endif
-
 // Returns the address according to the Number of Cards
 #define OFFSET(a) ((a * _byteNumber) + 1)
 
@@ -126,8 +122,8 @@ bool Card::SaveCard(uint8_t *Code, uint8_t size)
 {
   const uint8_t nbr = CardNumber();
 
-  // if size different from Constructor or better than 16
-  if ((size != _byteNumber) || (size > _pageSize))
+  // if size different from Constructor!
+  if ((size != _byteNumber))
     return (NULL);
 
   // if Number of Cards over limit!
@@ -161,8 +157,8 @@ bool Card::CardCheck(uint8_t *Code, uint8_t size)
   const uint8_t nbr = CardNumber();
   byte CodeRead[_byteNumber];
 
-  // if size different from Constructor or better than 16
-  if ((size != _byteNumber) || (size > _pageSize))
+  // if size different from Constructor!
+  if ((size != _byteNumber))
     return (NULL);
 
   for (uint8_t i = 0; i < nbr; i++)

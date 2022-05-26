@@ -54,6 +54,8 @@ class Card : protected Code
     bool SaveCard(byte *Code, uint8_t size);
     bool WriteCheck(byte *Code, uint8_t nbr);
     void CardRestoration(uint8_t nbr);
+
+  protected:
     uint8_t _byteNumber;
     uint8_t _maxCards;
 };
