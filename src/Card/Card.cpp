@@ -28,11 +28,13 @@
 /*!
     @brief Constructor for RFIDtoEEPROM library.
     @param byteNumber the number of bytes contained in the RFID Card.
+    @param eepromSize the EEPROM size in kbits.
 */
-Card::Card(uint8_t byteNumber)
+Card::Card(uint8_t byteNumber, uint32_t eepromSize)
 {
   _byteNumber = byteNumber;
-  _maxCards = min(((Code::length() - 1) / byteNumber), 255);
+  eepromSize = eepromSize > 0 ? (eepromSize * 128) : Code::length();
+  _maxCards = min(((eepromSize - 1) / byteNumber), 255);
 }
 
 /*!

@@ -44,7 +44,7 @@ RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) : Card(byteNumber)
 void RFIDtoEEPROM::begin(uint32_t eepromSize)
 {
   EEPROM.begin(eepromSize);
-  _maxCards = min(((length() - 1) / _byteNumber), 255);
+  _maxCards = min(((EEPROM.length() - 1) / _byteNumber), 255);
 }
 
 #endif // ESP32 || ESP8266

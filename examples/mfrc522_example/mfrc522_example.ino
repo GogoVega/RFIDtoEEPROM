@@ -48,7 +48,7 @@ RFIDtoEEPROM myCard(NUMBYTES);
 // Uncomment to use I2C EEPROM (EEPROMSize, I2CAddress, ByteNumber)
 // RFIDtoEEPROM_I2C myCard(RFIDtoEEPROM_I2C::kbits_256, 0x50, NUMBYTES);
 
-byte Code[4];
+byte Code[NUMBYTES];
 
 void setup() {
   Serial.begin(9600);
@@ -74,7 +74,7 @@ void setup() {
 void loop() {
   if (rfid.PICC_IsNewCardPresent()) {
     if (rfid.PICC_ReadCardSerial()) {
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < NUMBYTES; i++) {
         Code[i] = rfid.uid.uidByte[i];
       }
 

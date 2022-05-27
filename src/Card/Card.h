@@ -28,7 +28,7 @@
 class Card : protected Code
 {
   public:
-    Card(uint8_t byteNumber = 4);
+    Card(uint8_t byteNumber = 4, uint32_t eepromSize = 0);
 
     template <typename T>
     bool CardCheck(T &t)

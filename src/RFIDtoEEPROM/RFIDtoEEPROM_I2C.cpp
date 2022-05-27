@@ -28,7 +28,7 @@
     @param address I2C address of EEPROM.
     @param byteNumber the number of bytes contained in the RFID Card.
 */
-RFIDtoEEPROM_I2C::RFIDtoEEPROM_I2C(eeprom_size_t eepromSize, uint8_t address, uint8_t byteNumber) : Card(byteNumber)
+RFIDtoEEPROM_I2C::RFIDtoEEPROM_I2C(eeprom_size_t eepromSize, uint8_t address, uint8_t byteNumber) : Card(byteNumber, eepromSize)
 {
   _local = false;
   _eepromAddr = address;

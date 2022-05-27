@@ -42,6 +42,12 @@ pio pkg install --library "gogovega/RFID to EEPROM@^1.1.0"
 RFIDtoEEPROM(uint8_t byteNumber);
 ```
 
+#### Set emulated EEPROM size (only needed for ESP32 and ESP8266)
+
+```cpp
+void begin(uint32_t eepromSize);
+```
+
 - I2C EEPROM
 
 ```cpp
@@ -55,8 +61,9 @@ void begin(twiClockFreq_t twiFreq);
 ```
 
 #### Enumerations
+
 Use one of the enumerations below to set EEPROM Size:
-```
+```cpp
 {
   RFIDtoEEPROM_I2C::kbits_1,
   RFIDtoEEPROM_I2C::kbits_2,
@@ -74,7 +81,7 @@ Use one of the enumerations below to set EEPROM Size:
 ```
 
 And use one of the enumerations below to set twiClock (Wire) Frequence:
-```
+```cpp
 {
   RFIDtoEEPROM_I2C::twiClock100kHz,
   RFIDtoEEPROM_I2C::twiClock400kHz
@@ -99,6 +106,7 @@ This library contains several functions:
 ## Tested On
 
 - Atmel AT24C256
+- Microchip 24C65/P
 
 ## Future Features
 

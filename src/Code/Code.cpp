@@ -36,17 +36,19 @@ void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
 
   while (byteNumber > 0)
   {
-    uint8_t bytePage = _pageSize - ( address & (_pageSize - 1) );
+    uint8_t bytePage = _pageSize - (address & (_pageSize - 1));
     uint8_t byteRead = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
 
     while (isBusy())
       delayMicroseconds(100);
 
     Wire.beginTransmission((uint8_t)_eepromAddr);
-    if (_twoAddress) Wire.write((uint8_t)(address >> 8)); // MSB
-    Wire.write((uint8_t)(address & 0xFF));  // LSB
+    if (_twoAddress)
+      Wire.write((uint8_t)(address >> 8)); // MSB
+    Wire.write((uint8_t)(address & 0xFF)); // LSB
     rxStatus = Wire.endTransmission();
-    if (rxStatus != 0) break; // Read error
+    if (rxStatus != 0)
+      break; // Read error
 
     Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteRead);
 
@@ -56,9 +58,9 @@ void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
       Code[i++] = Wire.read();
     }
 
-    address += byteRead;     // Increment the EEPROM address
-    Code += byteRead;        // Increment the input data pointer
-    byteNumber -= byteRead;  // Decrement the number of bytes left to read
+    address += byteRead;    // Increment the EEPROM address
+    Code += byteRead;       // Increment the input data pointer
+    byteNumber -= byteRead; // Decrement the number of bytes left to read
   }
 }
 
@@ -74,22 +76,24 @@ void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
 
   while (byteNumber > 0)
   {
-    uint8_t bytePage = _pageSize - ( address & (_pageSize - 1) );
+    uint8_t bytePage = _pageSize - (address & (_pageSize - 1));
     uint8_t byteWrite = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
 
     while (isBusy())
       delayMicroseconds(100);
 
     Wire.beginTransmission((uint8_t)_eepromAddr);
-    if (_twoAddress) Wire.write((uint8_t)(address >> 8)); // MSB
-    Wire.write((uint8_t)(address & 0xFF));  // LSB
+    if (_twoAddress)
+      Wire.write((uint8_t)(address >> 8)); // MSB
+    Wire.write((uint8_t)(address & 0xFF)); // LSB
     Wire.write(Code, (uint8_t)byteWrite);
     txStatus = Wire.endTransmission();
-    if (txStatus != 0) break; // Write error
+    if (txStatus != 0)
+      break; // Write error
 
-    address += byteWrite;     // Increment the EEPROM address
-    Code += byteWrite;        // Increment the input data pointer
-    byteNumber -= byteWrite;  // Decrement the number of bytes left to write
+    address += byteWrite;    // Increment the EEPROM address
+    Code += byteWrite;       // Increment the input data pointer
+    byteNumber -= byteWrite; // Decrement the number of bytes left to write
 
     delayMicroseconds(500);
   }
@@ -129,17 +133,19 @@ void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
 
     while (byteNumber > 0)
     {
-      uint8_t bytePage = _pageSize - ( address & (_pageSize - 1) );
+      uint8_t bytePage = _pageSize - (address & (_pageSize - 1));
       uint8_t byteRead = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
 
       while (isBusy())
         delayMicroseconds(100);
 
       Wire.beginTransmission((uint8_t)_eepromAddr);
-      if (_twoAddress) Wire.write((uint8_t)(address >> 8)); // MSB
-      Wire.write((uint8_t)(address & 0xFF));  // LSB
+      if (_twoAddress)
+        Wire.write((uint8_t)(address >> 8)); // MSB
+      Wire.write((uint8_t)(address & 0xFF)); // LSB
       rxStatus = Wire.endTransmission();
-      if (rxStatus != 0) break; // Read error
+      if (rxStatus != 0)
+        break; // Read error
 
       Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteRead);
 
@@ -149,9 +155,9 @@ void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
         Code[i++] = Wire.read();
       }
 
-      address += byteRead;     // Increment the EEPROM address
-      Code += byteRead;        // Increment the input data pointer
-      byteNumber -= byteRead;  // Decrement the number of bytes left to read
+      address += byteRead;    // Increment the EEPROM address
+      Code += byteRead;       // Increment the input data pointer
+      byteNumber -= byteRead; // Decrement the number of bytes left to read
     }
   }
 }
@@ -181,22 +187,24 @@ void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
 
     while (byteNumber > 0)
     {
-      uint8_t bytePage = _pageSize - ( address & (_pageSize - 1) );
+      uint8_t bytePage = _pageSize - (address & (_pageSize - 1));
       uint8_t byteWrite = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
 
       while (isBusy())
         delayMicroseconds(100);
 
       Wire.beginTransmission((uint8_t)_eepromAddr);
-      if (_twoAddress) Wire.write((uint8_t)(address >> 8)); // MSB
-      Wire.write((uint8_t)(address & 0xFF));  // LSB
+      if (_twoAddress)
+        Wire.write((uint8_t)(address >> 8)); // MSB
+      Wire.write((uint8_t)(address & 0xFF)); // LSB
       Wire.write(Code, (uint8_t)byteWrite);
       txStatus = Wire.endTransmission();
-      if (txStatus != 0) break; // Write error
+      if (txStatus != 0)
+        break; // Write error
 
-      address += byteWrite;     // Increment the EEPROM address
-      Code += byteWrite;        // Increment the input data pointer
-      byteNumber -= byteWrite;  // Decrement the number of bytes left to write
+      address += byteWrite;    // Increment the EEPROM address
+      Code += byteWrite;       // Increment the input data pointer
+      byteNumber -= byteWrite; // Decrement the number of bytes left to write
 
       delayMicroseconds(500);
     }
