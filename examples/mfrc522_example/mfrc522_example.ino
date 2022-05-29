@@ -53,6 +53,9 @@ byte Code[NUMBYTES];
 void setup() {
   Serial.begin(9600);
 
+  // If you don't want to enable debugging, you can remove it
+  myCard.beginDebug(Serial);
+
   SPI.begin();
   rfid.PCD_Init();
 

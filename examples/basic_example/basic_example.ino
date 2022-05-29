@@ -34,6 +34,9 @@ RFIDtoEEPROM myCard(NUMBYTES);
 void setup() {
   Serial.begin(9600);
 
+  // If you don't want to enable debugging, you can remove it
+  myCard.beginDebug(Serial);
+
   // Uncomment to use the emulated EEPROM of the ESP32 or ESP8266
   // Set the desired size in bytes!
   // myCard.begin(8);

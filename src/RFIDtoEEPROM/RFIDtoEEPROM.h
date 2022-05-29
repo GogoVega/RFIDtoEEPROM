@@ -42,9 +42,7 @@ class RFIDtoEEPROM : public Card
     RFIDtoEEPROM(uint8_t byteNumber = 4);
 
     #if defined(ESP32) || defined(ESP8266)
-
     void begin(uint32_t eepromSize);
-
     #endif
 };
 
@@ -81,4 +79,4 @@ class RFIDtoEEPROM_I2C : public Card
     void begin(twiClockFreq_t twiFreq = twiClock100kHz);
 };
 
-#endif  // _RFIDtoEEPROM_h
+#endif // _RFIDtoEEPROM_h

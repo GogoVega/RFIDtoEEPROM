@@ -88,6 +88,14 @@ And use one of the enumerations below to set twiClock (Wire) Frequence:
 }
 ```
 
+### Enable Debugging
+
+Debugging makes it easier to find errors in a program. To use it, add the following function below your Serial begin and then open your [Serial Monitor](https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-serial-monitor) in order to receive error messages if there are any.
+
+```cpp
+void beginDebug(Stream &debugPort);
+```
+
 ### Functions
 
 This library contains several functions:
@@ -111,7 +119,6 @@ This library contains several functions:
 ## Future Features
 
 - Increase the number of recordable Cards (currently set to 255).
-- Improve error handling.
 
 ## Limitations
 

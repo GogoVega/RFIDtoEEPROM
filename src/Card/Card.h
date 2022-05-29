@@ -25,7 +25,7 @@
 
 #include <Code.h>
 
-class Card : protected Code
+class Card : public Code
 {
   public:
     Card(uint8_t byteNumber = 4, uint32_t eepromSize = 0);

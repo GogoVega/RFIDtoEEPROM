@@ -126,11 +126,17 @@ bool Card::SaveCard(uint8_t *Code, uint8_t size)
 
   // if size different from Constructor!
   if ((size != _byteNumber))
+  {
+    printDebug("Code size different from Constructor!");
     return (NULL);
+  }
 
   // if Number of Cards over limit!
   if (nbr >= _maxCards)
+  {
+    printDebug("Number of Cards over limit!");
     return (false);
+  }
 
   // if Card already saved!
   if (CardCheck(Code, size))
@@ -142,6 +148,7 @@ bool Card::SaveCard(uint8_t *Code, uint8_t size)
 
   if (!WriteCheck(Code, nbr))
   {
+    printDebug("Error during WriteCheck!");
     CardRestoration(nbr);
     return (false);
   }
@@ -161,7 +168,10 @@ bool Card::CardCheck(uint8_t *Code, uint8_t size)
 
   // if size different from Constructor!
   if ((size != _byteNumber))
+  {
+    printDebug("Code size different from Constructor!");
     return (NULL);
+  }
 
   for (uint8_t i = 0; i < nbr; i++)
   {

@@ -48,7 +48,10 @@ void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
     Wire.write((uint8_t)(address & 0xFF)); // LSB
     rxStatus = Wire.endTransmission();
     if (rxStatus != 0)
-      break; // Read error
+    {
+      printDebug(("Error: " + String(rxStatus) + " during reading!"));
+      return; // Read error
+    }
 
     Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteRead);
 
@@ -89,7 +92,10 @@ void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
     Wire.write(Code, (uint8_t)byteWrite);
     txStatus = Wire.endTransmission();
     if (txStatus != 0)
-      break; // Write error
+    {
+      printDebug(("Error: " + String(txStatus) + " during writing!"));
+      return; // Write error
+    }
 
     address += byteWrite;    // Increment the EEPROM address
     Code += byteWrite;       // Increment the input data pointer
@@ -145,7 +151,10 @@ void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
       Wire.write((uint8_t)(address & 0xFF)); // LSB
       rxStatus = Wire.endTransmission();
       if (rxStatus != 0)
-        break; // Read error
+      {
+        printDebug(("Error: " + String(rxStatus) + " during reading!"));
+        return; // Read error
+      }
 
       Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteRead);
 
@@ -200,7 +209,10 @@ void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
       Wire.write(Code, (uint8_t)byteWrite);
       txStatus = Wire.endTransmission();
       if (txStatus != 0)
-        break; // Write error
+      {
+        printDebug(("Error: " + String(txStatus) + " during writing!"));
+        return; // Write error
+      }
 
       address += byteWrite;    // Increment the EEPROM address
       Code += byteWrite;       // Increment the input data pointer

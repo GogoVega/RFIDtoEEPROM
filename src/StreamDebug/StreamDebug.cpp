@@ -20,30 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef Code_h
-#define Code_h
+#include <RFIDtoEEPROM.h>
 
-#include <Arduino.h>
-#include <StreamDebug.h>
-
-class Code : public StreamDebug
+/*!
+    @brief Set the port for debugging.
+    @param debugPort The port for debugging.
+*/
+void StreamDebug::beginDebug(Stream &debugPort)
 {
-  protected:
-    void read(uint32_t address, byte *Code, uint8_t byteNumber);
-    uint8_t read(uint32_t address);
-    void write(uint32_t address, byte *Code, uint8_t byteNumber);
-    void write(uint32_t address, uint8_t data);
-    uint8_t pageSize(uint32_t eepromSize);
-    uint32_t length(void);
+	Stream *Port = (Stream *)&debugPort;
+	this->_debugPort = Port;
+}
 
-    bool _local;
-    bool _twoAddress;
-    uint8_t _eepromAddr;
-    uint8_t _pageSize = 8;
-    uint32_t _eepromSize;
+/*!
+    @brief Print a message to Serial for debugging.
+    @param msg The message to print to Serial.
+*/
+void StreamDebug::printDebug(const String msg) const
+{
+	if (_debugPort == nullptr)
+		return;
 
-  private:
-    bool isBusy(void);
-};
-
-#endif // _Code_h
+	_debugPort->println(msg);
+}
