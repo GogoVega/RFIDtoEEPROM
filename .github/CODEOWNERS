@@ -4,4 +4,6 @@
 # Permission by file type
 *.cpp   @GogoVega
 *.h     @GogoVega
+*.ino   @GogoVega
+*.json  @GogoVega
 *.md    @GogoVega
