@@ -34,6 +34,30 @@
 #define BUFFER_LENGTH 32
 #endif
 
+//EEPROM size in Kbits.
+enum eeprom_size_t
+{
+  KBITS_1 = 1,
+  KBITS_2 = 2,
+  KBITS_4 = 4,
+  KBITS_8 = 8,
+  KBITS_16 = 16,
+  KBITS_32 = 32,
+  KBITS_64 = 64,
+  KBITS_128 = 128,
+  KBITS_256 = 256,
+  KBITS_512 = 512,
+  KBITS_1024 = 1024,
+  KBITS_2048 = 2048
+};
+
+// I2C Clock Frequencies.
+enum twiClockFreq_t
+{
+  TWICLOCK100KHZ = 100000,
+  TWICLOCK400KHZ = 400000
+};
+
 #if !defined(ARDUINO_ARCH_RP2040)
 
 class RFIDtoEEPROM : public Card
@@ -51,32 +75,9 @@ class RFIDtoEEPROM : public Card
 class RFIDtoEEPROM_I2C : public Card
 {
   public:
-    //EEPROM size in kbits.
-    enum eeprom_size_t
-    {
-      kbits_1 = 1,
-      kbits_2 = 2,
-      kbits_4 = 4,
-      kbits_8 = 8,
-      kbits_16 = 16,
-      kbits_32 = 32,
-      kbits_64 = 64,
-      kbits_128 = 128,
-      kbits_256 = 256,
-      kbits_512 = 512,
-      kbits_1024 = 1024,
-      kbits_2048 = 2048
-    };
-    // I2C Clock Frequencies.
-    enum twiClockFreq_t
-    {
-      twiClock100kHz = 100000,
-      twiClock400kHz = 400000
-    };
+    RFIDtoEEPROM_I2C(eeprom_size_t eepromSize = KBITS_256, uint8_t address = 0x50, uint8_t byteNumber = 4);
 
-    RFIDtoEEPROM_I2C(eeprom_size_t eepromSize = kbits_256, uint8_t address = 0x50, uint8_t byteNumber = 4);
-
-    void begin(twiClockFreq_t twiFreq = twiClock100kHz);
+    void begin(twiClockFreq_t twiFreq = TWICLOCK100KHZ);
 };
 
 #endif // _RFIDtoEEPROM_h

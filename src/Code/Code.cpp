@@ -281,13 +281,13 @@ bool Code::isBusy()
 */
 uint8_t Code::pageSize(uint32_t eepromSize)
 {
-  if (eepromSize < RFIDtoEEPROM_I2C::kbits_4)
+  if (eepromSize < KBITS_4)
     return 8;
-  else if (eepromSize < RFIDtoEEPROM_I2C::kbits_32)
+  else if (eepromSize < KBITS_32)
     return 16;
-  else if (eepromSize < RFIDtoEEPROM_I2C::kbits_128)
+  else if (eepromSize < KBITS_128)
     return 32;
-  else if (eepromSize < RFIDtoEEPROM_I2C::kbits_512)
+  else if (eepromSize < KBITS_512)
     return 64;
 
   return 128;

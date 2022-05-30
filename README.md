@@ -65,26 +65,26 @@ void begin(twiClockFreq_t twiFreq);
 Use one of the enumerations below to set EEPROM Size:
 ```cpp
 {
-  RFIDtoEEPROM_I2C::kbits_1,
-  RFIDtoEEPROM_I2C::kbits_2,
-  RFIDtoEEPROM_I2C::kbits_4,
-  RFIDtoEEPROM_I2C::kbits_8,
-  RFIDtoEEPROM_I2C::kbits_16,
-  RFIDtoEEPROM_I2C::kbits_32,
-  RFIDtoEEPROM_I2C::kbits_64,
-  RFIDtoEEPROM_I2C::kbits_128,
-  RFIDtoEEPROM_I2C::kbits_256,
-  RFIDtoEEPROM_I2C::kbits_512,
-  RFIDtoEEPROM_I2C::kbits_1024,
-  RFIDtoEEPROM_I2C::kbits_2048
+  KBITS_1,
+  KBITS_2,
+  KBITS_4,
+  KBITS_8,
+  KBITS_16,
+  KBITS_32,
+  KBITS_64,
+  KBITS_128,
+  KBITS_256,
+  KBITS_512,
+  KBITS_1024,
+  KBITS_2048
 }
 ```
 
 And use one of the enumerations below to set twiClock (Wire) Frequence:
 ```cpp
 {
-  RFIDtoEEPROM_I2C::twiClock100kHz,
-  RFIDtoEEPROM_I2C::twiClock400kHz
+  TWICLOCK100KHZ,
+  TWICLOCK400KHZ
 }
 ```
 

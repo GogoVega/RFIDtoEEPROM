@@ -46,7 +46,7 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 RFIDtoEEPROM myCard(NUMBYTES);
 
 // Uncomment to use I2C EEPROM (EEPROMSize, I2CAddress, ByteNumber)
-// RFIDtoEEPROM_I2C myCard(RFIDtoEEPROM_I2C::kbits_256, 0x50, NUMBYTES);
+// RFIDtoEEPROM_I2C myCard(KBITS_256, 0x50, NUMBYTES);
 
 byte Code[NUMBYTES];
 
