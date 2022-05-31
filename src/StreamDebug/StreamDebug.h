@@ -20,28 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef RFIDtoEEPROM_H
-#define RFIDtoEEPROM_H
+#ifndef StreamDebug_h
+#define StreamDebug_h
 
-#include <Arduino.h>
+#include <Stream.h>
 
-class RFIDtoEEPROM
+class StreamDebug
 {
   public:
-    RFIDtoEEPROM(uint8_t byteNumber = 4);
+    void beginDebug(Stream &debugPort);
 
-    bool CardCheck(byte Code[]);
-    bool SaveCard(byte Code[]);
-    void ClearCardNumber(void);
-    void EraseAllCards(void);
-    uint8_t CardNumber(void);
-    uint8_t MaxCards(void);
+  protected:
+    void printDebug(const String msg) const;
 
   private:
-    bool WriteCheck(byte Code[], uint8_t nbr);
-    void CardRestoration(int nbr);
-    uint8_t _byteNumber;
-    uint8_t _maxCards;
+    Stream *_debugPort = nullptr;
 };
 
-#endif  // _RFIDtoEEPROM_H
+#endif // _StreamDebug.h

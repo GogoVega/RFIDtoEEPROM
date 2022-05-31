@@ -1,8 +1,8 @@
 {
   "name": "RFID to EEPROM",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Library to write an RFID code in the EEPROM in order to check if the code corresponds to a code already saved.",
-  "keywords": ["rfid", "eeprom"],
+  "keywords": ["rfid", "eeprom", "storage"],
   "repository":
   {
     "type": "git",
@@ -16,5 +16,6 @@
   },
   "license": "MIT",
   "frameworks": "arduino",
-  "platforms": "atmelavr"
+  "platforms": ["atmelavr", "atmelmegaavr", "espressif32", "espressif8266", "raspberrypi"],
+  "headers": "RFIDtoEEPROM.h"
 }

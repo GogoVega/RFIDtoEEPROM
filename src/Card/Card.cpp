@@ -22,149 +22,173 @@
 
 #include <RFIDtoEEPROM.h>
 
-#if defined(__AVR__)
-// Arduino
-
-#include <EEPROM.h>
-
 // Returns the address according to the Number of Cards
-// a = Number of Cards
-// b = Loop Iteration
-#define OFFSET(a, b) ((a * _byteNumber) + 1 + b)
+#define OFFSET(a) ((a * _byteNumber) + 1)
 
 /*!
     @brief Constructor for RFIDtoEEPROM library.
     @param byteNumber the number of bytes contained in the RFID Card.
+    @param eepromSize the EEPROM size in kbits.
 */
-RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) {
+Card::Card(uint8_t byteNumber, uint32_t eepromSize)
+{
   _byteNumber = byteNumber;
-  _maxCards = min(((EEPROM.length() - 1) / byteNumber), 255);
+  eepromSize = eepromSize > 0 ? (eepromSize * 128) : Code::length();
+  _maxCards = min(((eepromSize - 1) / byteNumber), 255);
 }
-
 
 /*!
     @brief Returns the Number of Cards already registered.
     @return the Number of Cards already registered (uint8_t).
 */
-uint8_t RFIDtoEEPROM::CardNumber() {
-  return EEPROM.read(0);
+uint8_t Card::CardNumber()
+{
+  return Code::read(0);
 }
-
 
 /*!
     @brief Returns the maximum Number of Cards that can be registered. The maximum is set at 255.
     @return the maximum Number of Cards (uint8_t).
 */
-uint8_t RFIDtoEEPROM::MaxCards() {
+uint8_t Card::MaxCards()
+{
   return _maxCards;
 }
 
 /*!
     @brief Reset the Number of Cards to 0.
 */
-void RFIDtoEEPROM::ClearCardNumber() {
-  EEPROM.update(0, 0);
+void Card::ClearCardNumber()
+{
+  Code::write(0, 0);
 }
-
 
 /*!
     @brief Erase all Cards.
     @note The EEPROM memory has a specified life of 100,000 write/erase cycles,
      so you may need to be careful about how often you write to it.
 */
-void RFIDtoEEPROM::EraseAllCards() {
-  for (uint16_t i = 0; i < EEPROM.length() ; i++) {
-    EEPROM.update(i, 0);
+void Card::EraseAllCards()
+{
+  byte Code[_pageSize] = {};
+
+  for (uint32_t n = 0; n < (Code::length() / _pageSize); n++)
+  {
+    Code::write((n * _pageSize), Code, _pageSize);
   }
 }
-
 
 /*!
     @brief Restoration of the old Card.
     @param nbr Old Card Number before the failure.
 */
-void RFIDtoEEPROM::CardRestoration(int nbr) {
+void Card::CardRestoration(uint8_t nbr)
+{
   /* Uncomment if you want to reset the Card
-  for (int n = 0; n < 4; n++) {
-    EEPROM.update(OFFSET(nbr, n), 0);
-  }
+  byte Code[_byteNumber] = {};
+  Code::write(OFFSET(nbr), Code, _byteNumber);
   */
 
-  EEPROM.update(0, nbr);
+  Code::write(0, nbr);
 }
-
 
 /*!
     @brief Checks if the Code has been correctly written in the EEPROM.
-    @param Code[] The UID of the RFID Code to Check.
+    @param Code The UID of the RFID Code to Check.
     @param nbr The number of Cards.
     @return true on successful writing (bool).
 */
-bool RFIDtoEEPROM::WriteCheck(byte Code[], uint8_t nbr) {
-  if (EEPROM.read(0) != (nbr + 1))
-    return false;
+bool Card::WriteCheck(byte *Code, uint8_t nbr)
+{
+  byte CodeRead[_byteNumber];
 
-  for (uint8_t n = 0; n < _byteNumber; n++) {
-    if (Code[n] != EEPROM.read(OFFSET(nbr, n)))
-      return false;
+  if (Code::read(0) != (nbr + 1))
+    return (false);
+
+  Code::read(OFFSET(nbr), CodeRead, _byteNumber);
+  for (uint8_t n = 0; n < _byteNumber; n++)
+  {
+    if (Code[n] != CodeRead[n])
+      return (false);
   }
 
-  return true;
+  return (true);
 }
-
 
 /*!
     @brief Save the New Card to EEPROM.
-    @param Code[] The UID of the RFID Code to save.
+    @param Code The UID of the RFID Code to save.
     @return true on successful saving (bool).
 */
-bool RFIDtoEEPROM::SaveCard(byte Code[]) {
+bool Card::SaveCard(uint8_t *Code, uint8_t size)
+{
   const uint8_t nbr = CardNumber();
 
+  // if size different from Constructor!
+  if ((size != _byteNumber))
+  {
+    printDebug("Code size different from Constructor!");
+    return (NULL);
+  }
+
+  // if Number of Cards over limit!
   if (nbr >= _maxCards)
-    return false;
-
-  for (uint8_t n = 0; n < _byteNumber; n++) {
-    EEPROM.update(OFFSET(nbr, n), Code[n]);
+  {
+    printDebug("Number of Cards over limit!");
+    return (false);
   }
 
-  EEPROM.update(0, (nbr + 1));
+  // if Card already saved!
+  if (CardCheck(Code, size))
+    return (true);
 
-  if (!WriteCheck(Code, nbr)) {
+  Code::write(OFFSET(nbr), Code, _byteNumber);
+
+  Code::write(0, (nbr + 1));
+
+  if (!WriteCheck(Code, nbr))
+  {
+    printDebug("Error during WriteCheck!");
     CardRestoration(nbr);
-    return false;
+    return (false);
   }
 
-  return true;
+  return (true);
 }
-
 
 /*!
     @brief Check if the Card Matches with a Card saved in the EEPROM.
-    @param Code[] The UID of the RFID Code to Check.
+    @param Code The UID of the RFID Code to Check.
     @return true if a Card Matches (bool).
 */
-bool RFIDtoEEPROM::CardCheck(byte Code[]) {
+bool Card::CardCheck(uint8_t *Code, uint8_t size)
+{
   const uint8_t nbr = CardNumber();
+  byte CodeRead[_byteNumber];
 
-  for (uint8_t i = 0; i < nbr; i++) {
+  // if size different from Constructor!
+  if ((size != _byteNumber))
+  {
+    printDebug("Code size different from Constructor!");
+    return (NULL);
+  }
+
+  for (uint8_t i = 0; i < nbr; i++)
+  {
     uint8_t match = 0;
 
-    for (uint8_t n = 0; n < _byteNumber; n++) {
-      if (Code[n] == EEPROM.read(OFFSET(i, n)))
+    Code::read(OFFSET(i), CodeRead, _byteNumber);
+    for (uint8_t n = 0; n < _byteNumber; n++)
+    {
+      if (Code[n] == CodeRead[n])
         match++;
     }
 
-    if (match == _byteNumber) {
-      return true;
+    if (match == _byteNumber)
+    {
+      return (true);
     }
   }
 
-  return false;
+  return (false);
 }
-
-#else
-
-#error “Unsupported board selected!”
-
-#endif
