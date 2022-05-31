@@ -86,7 +86,7 @@ void setup() {
   if (myCard.CardCheck(Code)) {
     Serial.println("The Card Matches");
   } else {
-    Serial.println("The Card Not Matches!");
+    Serial.println("The Card does not Match!");
   }
 }
 
