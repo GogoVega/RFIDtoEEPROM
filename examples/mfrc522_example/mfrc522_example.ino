@@ -112,9 +112,9 @@ void loop() {
           Serial.println("Checking Card Matches...");
 
           if (myCard.CardCheck(Code)) {
-            Serial.println("Card Matches");
+            Serial.println("The Card Matches");
           } else {
-            Serial.println("Card Not Matches!");
+            Serial.println("The Card does not Match!");
           }
         }
       }
