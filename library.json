@@ -17,5 +17,13 @@
   "license": "MIT",
   "frameworks": "arduino",
   "platforms": ["atmelavr", "atmelmegaavr", "espressif32", "espressif8266", "raspberrypi"],
-  "headers": "RFIDtoEEPROM.h"
+  "headers": "RFIDtoEEPROM.h",
+  "build": {
+    "flags": [
+      "-Isrc/RFIDtoEEPROM", 
+      "-Isrc/StreamDebug", 
+      "-Isrc/Card",
+      "-Isrc/Code"
+    ]
+  }
 }
