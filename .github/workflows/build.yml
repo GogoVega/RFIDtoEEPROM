@@ -31,6 +31,7 @@ jobs:
         pip install --upgrade platformio
         pio pkg install -g --library "miguelbalboa/MFRC522@^1.4.10"
     - name: Run PlatformIO
-      run: pio ci --lib="." --board=uno --board=nano_every --board=esp32dev --board=nodemcuv2 --board=pico 
+      # note: Add --board=pico after Pico development is done and examples are adapted.
+      run: pio ci --lib="." --board=uno --board=nano_every --board=esp32dev --board=nodemcuv2 
       env:
         PLATFORMIO_CI_SRC: ${{ matrix.example }}
