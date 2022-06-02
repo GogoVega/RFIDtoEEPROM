@@ -118,10 +118,12 @@ This library contains several functions:
 
 ## Future Features
 
+- Be able to use the internal memory of the Raspberry Pi Pico.
 - Increase the number of recordable Cards (currently set to 255).
 
 ## Limitations
 
+- It is not possible to use the internal memory of the Raspberry Pi Pico, you must add an external I2C EEPROM.
 - The Number of recordable Cards is fixed at 255.
 
 ## License
