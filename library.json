@@ -2,7 +2,7 @@
   "name": "RFID to EEPROM",
   "version": "1.1.0",
   "description": "Library to write an RFID code in the EEPROM in order to check if the code corresponds to a code already saved.",
-  "keywords": ["rfid", "eeprom", "storage"],
+  "keywords": ["eeprom", "rfid", "storage"],
   "repository":
   {
     "type": "git",
@@ -20,10 +20,10 @@
   "headers": "RFIDtoEEPROM.h",
   "build": {
     "flags": [
-      "-Isrc/RFIDtoEEPROM", 
-      "-Isrc/StreamDebug", 
       "-Isrc/Card",
-      "-Isrc/Code"
+      "-Isrc/Code",
+      "-Isrc/RFIDtoEEPROM",
+      "-Isrc/StreamDebug"
     ]
   }
 }

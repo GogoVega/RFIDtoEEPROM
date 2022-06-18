@@ -24,12 +24,13 @@
 
 #if defined(ARDUINO_ARCH_RP2040)
 
-/*!
-    @brief Read Code from EEPROM.
-    @param address Departure address for reading.
-    @param Code Variable that will be modified by reading.
-    @param byteNumber The Number of byte to read.
-*/
+/**
+ * @brief Read Code from EEPROM.
+ *
+ * @param address Departure address for reading.
+ * @param Code Variable that will be modified by reading.
+ * @param byteNumber The Number of byte to read.
+ */
 void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
 {
   uint8_t rxStatus = 0;
@@ -67,12 +68,13 @@ void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
   }
 }
 
-/*!
-    @brief Write Code to EEPROM.
-    @param address Departure address for writing.
-    @param Code Code to write.
-    @param byteNumber The Number of byte to write.
-*/
+/**
+ * @brief Write Code to EEPROM.
+ *
+ * @param address Departure address for writing.
+ * @param Code Code to write.
+ * @param byteNumber The Number of byte to write.
+ */
 void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
 {
   uint8_t txStatus = 0;
@@ -105,10 +107,11 @@ void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
   }
 }
 
-/*!
-    @brief Returns the Number of Cells in the EEPROM.
-    @return the Number of Cells in the EEPROM (uint32_t).
-*/
+/**
+ * @brief Returns the Number of Cells in the EEPROM.
+ *
+ * @return uint32_t The Number of Cells in the EEPROM.
+ */
 uint32_t Code::length()
 {
   return (_eepromSize * 128);
@@ -118,12 +121,13 @@ uint32_t Code::length()
 
 #include <EEPROM.h>
 
-/*!
-    @brief Read Code from EEPROM.
-    @param address Departure address for reading.
-    @param Code Variable that will be modified by reading.
-    @param byteNumber The Number of byte to read.
-*/
+/**
+ * @brief Read Code from EEPROM.
+ *
+ * @param address Departure address for reading.
+ * @param Code Variable that will be modified by reading.
+ * @param byteNumber The Number of byte to read.
+ */
 void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
 {
   if (_local)
@@ -171,12 +175,13 @@ void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
   }
 }
 
-/*!
-    @brief Write Code to EEPROM.
-    @param address Departure address for writing.
-    @param Code Code to write.
-    @param byteNumber The Number of byte to write.
-*/
+/**
+ * @brief Write Code to EEPROM.
+ *
+ * @param address Departure address for writing.
+ * @param Code Code to write.
+ * @param byteNumber The Number of byte to write.
+ */
 void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
 {
   if (_local)
@@ -223,10 +228,11 @@ void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
   }
 }
 
-/*!
-    @brief Returns the Number of Cells in the EEPROM.
-    @return the Number of Cells in the EEPROM (uint32_t).
-*/
+/**
+ * @brief Returns the Number of Cells in the EEPROM.
+ *
+ * @return uint32_t The Number of Cells in the EEPROM.
+ */
 uint32_t Code::length()
 {
   if (_local)
@@ -237,11 +243,12 @@ uint32_t Code::length()
 
 #endif
 
-/*!
-    @brief Read byte from EEPROM.
-    @param address Address for reading.
-    @return the byte read (uint8_t).
-*/
+/**
+ * @brief Read byte from EEPROM.
+ *
+ * @param address Address for reading.
+ * @return uint8_t The byte read.
+ */
 uint8_t Code::read(uint32_t address)
 {
   uint8_t data;
@@ -250,21 +257,24 @@ uint8_t Code::read(uint32_t address)
   return (data);
 }
 
-/*!
-    @brief Write byte to EEPROM.
-    @param address Address for writing.
-    @param data the byte to write.
-*/
+/**
+ * @brief Write byte to EEPROM.
+ *
+ * @param address Address for writing.
+ * @param data The byte to write.
+ */
 void Code::write(uint32_t address, uint8_t data)
 {
   if (read(address) != data)
     write(address, &data, 1);
 }
 
-/*!
-    @brief Check if device is not answering (currently writing).
-    @return true if writing in progress (bool).
-*/
+/**
+ * @brief Check if device is not answering (currently writing).
+ *
+ * @return true Busy.
+ * @return false Ready for reading/writing.
+ */
 bool Code::isBusy()
 {
   Wire.beginTransmission((uint8_t)_eepromAddr);
@@ -274,11 +284,12 @@ bool Code::isBusy()
   return (true);
 }
 
-/*!
-    @brief Returns the page size of EEPROM.
-    @param eepromSize EEPROM size in Kbits.
-    @return the page size of EEPROM (uint8_t).
-*/
+/**
+ * @brief Returns the page size of EEPROM.
+ *
+ * @param eepromSize EEPROM size in Kbits.
+ * @return uint8_t The page size of EEPROM.
+ */
 uint8_t Code::pageSize(uint32_t eepromSize)
 {
   if (eepromSize < KBITS_4)

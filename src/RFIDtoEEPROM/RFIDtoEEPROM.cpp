@@ -24,10 +24,11 @@
 
 #include <RFIDtoEEPROM.h>
 
-/*!
-    @brief Constructor for RFIDtoEEPROM library.
-    @param byteNumber the number of bytes contained in the RFID Card.
-*/
+/**
+ * @brief Construct a new RFIDtoEEPROM::RFIDtoEEPROM object
+ *
+ * @param byteNumber The number of bytes contained in the RFID Card.
+ */
 RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) : Card(byteNumber)
 {
   _local = true;
@@ -37,10 +38,11 @@ RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) : Card(byteNumber)
 
 #include <EEPROM.h>
 
-/*!
-    @brief Set the EEPROM emulation size.
-    @param eepromSize The EEPROM size in Byte!!!
-*/
+/**
+ * @brief Set the EEPROM emulation size.
+ *
+ * @param eepromSize The EEPROM size in Byte!!!
+ */
 void RFIDtoEEPROM::begin(uint32_t eepromSize)
 {
   EEPROM.begin(eepromSize);

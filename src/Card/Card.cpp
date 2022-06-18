@@ -25,11 +25,12 @@
 // Returns the address according to the Number of Cards
 #define OFFSET(a) ((a * _byteNumber) + 1)
 
-/*!
-    @brief Constructor for RFIDtoEEPROM library.
-    @param byteNumber the number of bytes contained in the RFID Card.
-    @param eepromSize the EEPROM size in kbits.
-*/
+/**
+ * @brief Construct a new Card:: Card object.
+ *
+ * @param byteNumber The number of bytes contained in the RFID Card.
+ * @param eepromSize The EEPROM size in kbits.
+ */
 Card::Card(uint8_t byteNumber, uint32_t eepromSize)
 {
   _byteNumber = byteNumber;
@@ -37,37 +38,41 @@ Card::Card(uint8_t byteNumber, uint32_t eepromSize)
   _maxCards = min(((eepromSize - 1) / byteNumber), 255);
 }
 
-/*!
-    @brief Returns the Number of Cards already registered.
-    @return the Number of Cards already registered (uint8_t).
-*/
+/**
+ * @brief Returns the Number of Cards already registered.
+ *
+ * @return uint8_t The Number of Cards already registered.
+ */
 uint8_t Card::CardNumber()
 {
   return Code::read(0);
 }
 
-/*!
-    @brief Returns the maximum Number of Cards that can be registered. The maximum is set at 255.
-    @return the maximum Number of Cards (uint8_t).
-*/
+/**
+ * @brief Returns the maximum Number of Cards that can be registered. The maximum is set at 255.
+ *
+ * @return uint8_t The maximum Number of Cards.
+ */
 uint8_t Card::MaxCards()
 {
   return _maxCards;
 }
 
-/*!
-    @brief Reset the Number of Cards to 0.
-*/
+/**
+ * @brief Reset the Number of Cards to 0.
+ *
+ */
 void Card::ClearCardNumber()
 {
   Code::write(0, 0);
 }
 
-/*!
-    @brief Erase all Cards.
-    @note The EEPROM memory has a specified life of 100,000 write/erase cycles,
-     so you may need to be careful about how often you write to it.
-*/
+/**
+ * @brief Erase all Cards.
+ *
+ * @note The EEPROM memory has a specified life of 100,000 write/erase cycles,
+ * so you may need to be careful about how often you write to it.
+ */
 void Card::EraseAllCards()
 {
   byte Code[_pageSize] = {};
@@ -78,10 +83,11 @@ void Card::EraseAllCards()
   }
 }
 
-/*!
-    @brief Restoration of the old Card.
-    @param nbr Old Card Number before the failure.
-*/
+/**
+ * @brief Restoration of the old Card.
+ *
+ * @param nbr Old Card Number before the failure.
+ */
 void Card::CardRestoration(uint8_t nbr)
 {
   /* Uncomment if you want to reset the Card
@@ -92,12 +98,14 @@ void Card::CardRestoration(uint8_t nbr)
   Code::write(0, nbr);
 }
 
-/*!
-    @brief Checks if the Code has been correctly written in the EEPROM.
-    @param Code The UID of the RFID Code to Check.
-    @param nbr The number of Cards.
-    @return true on successful writing (bool).
-*/
+/**
+ * @brief Checks if the Code has been correctly written in the EEPROM.
+ *
+ * @param Code The UID of the RFID Code to Check.
+ * @param nbr The number of Cards.
+ * @return true Successful writing.
+ * @return false Error while writing.
+ */
 bool Card::WriteCheck(byte *Code, uint8_t nbr)
 {
   byte CodeRead[_byteNumber];
@@ -115,11 +123,14 @@ bool Card::WriteCheck(byte *Code, uint8_t nbr)
   return (true);
 }
 
-/*!
-    @brief Save the New Card to EEPROM.
-    @param Code The UID of the RFID Code to save.
-    @return true on successful saving (bool).
-*/
+/**
+ * @brief Save the New Card to EEPROM.
+ *
+ * @param Code The UID of the RFID Code to save.
+ * @param size The UID size.
+ * @return true Successful saving.
+ * @return false Error while saving.
+ */
 bool Card::SaveCard(uint8_t *Code, uint8_t size)
 {
   const uint8_t nbr = CardNumber();
@@ -156,11 +167,14 @@ bool Card::SaveCard(uint8_t *Code, uint8_t size)
   return (true);
 }
 
-/*!
-    @brief Check if the Card Matches with a Card saved in the EEPROM.
-    @param Code The UID of the RFID Code to Check.
-    @return true if a Card Matches (bool).
-*/
+/**
+ * @brief Check if the Card Matches with a Card saved in the EEPROM.
+ *
+ * @param Code The UID of the RFID Code to Check.
+ * @param size The UID size.
+ * @return true The Card Matches.
+ * @return false The Card does not Match!
+ */
 bool Card::CardCheck(uint8_t *Code, uint8_t size)
 {
   const uint8_t nbr = CardNumber();

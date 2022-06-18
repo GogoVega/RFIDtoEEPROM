@@ -22,20 +22,22 @@
 
 #include <RFIDtoEEPROM.h>
 
-/*!
-    @brief Set the port for debugging.
-    @param debugPort The port for debugging.
-*/
+/**
+ * @brief Set the port for debugging.
+ *
+ * @param debugPort The port for debugging.
+ */
 void StreamDebug::beginDebug(Stream &debugPort)
 {
 	Stream *Port = (Stream *)&debugPort;
 	this->_debugPort = Port;
 }
 
-/*!
-    @brief Print a message to Serial for debugging.
-    @param msg The message to print to Serial.
-*/
+/**
+ * @brief Print a message to Serial for debugging.
+ *
+ * @param msg The message to print to Serial.
+ */
 void StreamDebug::printDebug(const String msg) const
 {
 	if (_debugPort == nullptr)

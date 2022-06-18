@@ -22,12 +22,13 @@
 
 #include <RFIDtoEEPROM.h>
 
-/*!
-    @brief Constructor for RFIDtoEEPROM_I2C library.
-    @param eepromSize EEPROM size in kbits.
-    @param address I2C address of EEPROM.
-    @param byteNumber the number of bytes contained in the RFID Card.
-*/
+/**
+ * @brief Construct a new RFIDtoEEPROM_I2C::RFIDtoEEPROM_I2C object.
+ *
+ * @param eepromSize EEPROM size in kbits.
+ * @param address I2C address of EEPROM.
+ * @param byteNumber The number of bytes contained in the RFID Card.
+ */
 RFIDtoEEPROM_I2C::RFIDtoEEPROM_I2C(eeprom_size_t eepromSize, uint8_t address, uint8_t byteNumber) : Card(byteNumber, eepromSize)
 {
   _local = false;
@@ -37,10 +38,11 @@ RFIDtoEEPROM_I2C::RFIDtoEEPROM_I2C(eeprom_size_t eepromSize, uint8_t address, ui
   _twoAddress = eepromSize > KBITS_16 ? true : false;
 }
 
-/*!
-    @brief Set the I2C communication frequency.
-    @param twiFreq Frequency.
-*/
+/**
+ * @brief Set the I2C communication frequency.
+ *
+ * @param twiFreq I2C Frequency.
+ */
 void RFIDtoEEPROM_I2C::begin(twiClockFreq_t twiFreq)
 {
   Wire.begin();

@@ -1,25 +1,29 @@
-/*
-* This library is used to save an RFID Code in the EEPROM and Check if the Code
-* corresponds to a Code already saved.
-*
-* It can be very useful if you use an RFID reader to lock / unlock your Arduino.
-*
-* This is a basic example that will allow you to:
-* - Know the Number of registered Cards
-* - Save a New Card to EEPROM
-* - Check if the Code provided corresponds to a Code already saved
-* - Reset the Number of Cards to 0
-* - Erase all Cards.
-*
-* Warning: you must use the same number of bytes in your functions as defined
-* in the Constructor!
-*
-* Create April 2022
-*
-* Copyright (c) 2022 Gauthier Dandele
-*
-* MIT License
-*/
+/**
+ * @file basic_example.ino
+ * @author Gauthier Dandele
+ * @brief This library is used to save an RFID Code in the EEPROM and Check if
+ * the Code corresponds to a Code already saved.
+ *
+ * It can be very useful if you use an RFID reader to lock / unlock your Arduino.
+ *
+ * This is a basic example that will allow you to:
+ * - Know the Number of registered Cards
+ * - Know the Number of recordable Cards
+ * - Save a New Card to EEPROM
+ * - Check if the Code provided corresponds to a Code already saved
+ * - Reset the Number of Cards to 0
+ * - Erase all Cards.
+ *
+ * @warning You must use the same number of bytes in your functions as defined
+ * in the Constructor!
+ *
+ * @version 0.2
+ * @date 2022-05-31
+ *
+ * @copyright Copyright (c) 2022 Gauthier Dandele
+ *
+ * MIT License
+ */
 
 #include <RFIDtoEEPROM.h>
 

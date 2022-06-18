@@ -1,36 +1,39 @@
-/*
-* This library is used to save an RFID Code in the EEPROM and Check if the Code
-* corresponds to a Code already saved.
-*
-* It can be very useful if you use an RFID reader to lock / unlock your Arduino.
-*
-* This is an example with MFRC522 library to retrieve the Code from your Card.
-*
-* A button will be used to request a Card recording.
-*
-* Typical pin layout used:
-* -----------------------------------------------------------------------------------------
-*             MFRC522      Arduino       Arduino   Arduino    Arduino          Arduino
-*             Reader/PCD   Uno/101       Mega      Nano v3    Leonardo/Micro   Pro Micro
-* Signal      Pin          Pin           Pin       Pin        Pin              Pin
-* -----------------------------------------------------------------------------------------
-* RST/Reset   RST          9             5         D9         RESET/ICSP-5     RST
-* SPI SS      SDA(SS)      10            53        D10        10               10
-* SPI MOSI    MOSI         11 / ICSP-4   51        D11        ICSP-4           16
-* SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
-* SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
-*
-* More pin layouts for other boards can be found here: https://github.com/miguelbalboa/rfid#pin-layout
-*
-* Warning: you must use the same number of bytes in your functions as defined
-* in the Constructor!
-*
-* Create April 2022
-*
-* Copyright (c) 2022 Gauthier Dandele
-*
-* MIT License
-*/
+/**
+ * @file mfrc522_example.ino
+ * @author Gauthier Dandele
+ * @brief This library is used to save an RFID Code in the EEPROM and Check if
+ * the Code corresponds to a Code already saved.
+ *
+ * It can be very useful if you use an RFID reader to lock / unlock your Arduino.
+ *
+ * This is an example with MFRC522 library to retrieve the Code from your Card.
+ *
+ * A button will be used to request a Card recording.
+ *
+ * Typical pin layout used:
+ * -----------------------------------------------------------------------------------------
+ *             MFRC522      Arduino       Arduino   Arduino    Arduino          Arduino
+ *             Reader/PCD   Uno/101       Mega      Nano v3    Leonardo/Micro   Pro Micro
+ * Signal      Pin          Pin           Pin       Pin        Pin              Pin
+ * -----------------------------------------------------------------------------------------
+ * RST/Reset   RST          9             5         D9         RESET/ICSP-5     RST
+ * SPI SS      SDA(SS)      10            53        D10        10               10
+ * SPI MOSI    MOSI         11 / ICSP-4   51        D11        ICSP-4           16
+ * SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
+ * SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
+ *
+ * More pin layouts for other boards can be found here: https://github.com/miguelbalboa/rfid#pin-layout
+ *
+ * @warning You must use the same number of bytes in your functions as defined
+ * in the Constructor!
+ *
+ * @version 0.2
+ * @date 2022-05-31
+ *
+ * @copyright Copyright (c) 2022 Gauthier Dandele
+ *
+ * MIT License
+ */
 
 #include <MFRC522.h>
 #include <RFIDtoEEPROM.h>
