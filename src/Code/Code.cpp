@@ -21,104 +21,6 @@
 // SOFTWARE.
 
 #include <RFIDtoEEPROM.h>
-
-#if defined(ARDUINO_ARCH_RP2040)
-
-/**
- * @brief Read Code from EEPROM.
- *
- * @param address Departure address for reading.
- * @param Code Variable that will be modified by reading.
- * @param byteNumber The Number of byte to read.
- */
-void Code::read(uint32_t address, byte *Code, uint8_t byteNumber)
-{
-  uint8_t rxStatus = 0;
-
-  while (byteNumber > 0)
-  {
-    uint8_t bytePage = _pageSize - (address & (_pageSize - 1));
-    uint8_t byteRead = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
-
-    while (isBusy())
-      delayMicroseconds(100);
-
-    Wire.beginTransmission((uint8_t)_eepromAddr);
-    if (_twoAddress)
-      Wire.write((uint8_t)(address >> 8)); // MSB
-    Wire.write((uint8_t)(address & 0xFF)); // LSB
-    rxStatus = Wire.endTransmission();
-    if (rxStatus != 0)
-    {
-      printDebug(("Error: " + String(rxStatus) + " during reading!"));
-      return; // Read error
-    }
-
-    Wire.requestFrom((uint8_t)_eepromAddr, (uint8_t)byteRead);
-
-    uint8_t i = 0;
-    while (Wire.available())
-    {
-      Code[i++] = Wire.read();
-    }
-
-    address += byteRead;    // Increment the EEPROM address
-    Code += byteRead;       // Increment the input data pointer
-    byteNumber -= byteRead; // Decrement the number of bytes left to read
-  }
-}
-
-/**
- * @brief Write Code to EEPROM.
- *
- * @param address Departure address for writing.
- * @param Code Code to write.
- * @param byteNumber The Number of byte to write.
- */
-void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
-{
-  uint8_t txStatus = 0;
-
-  while (byteNumber > 0)
-  {
-    uint8_t bytePage = _pageSize - (address & (_pageSize - 1));
-    uint8_t byteWrite = min((min(bytePage, byteNumber)), (BUFFER_LENGTH - 2));
-
-    while (isBusy())
-      delayMicroseconds(100);
-
-    Wire.beginTransmission((uint8_t)_eepromAddr);
-    if (_twoAddress)
-      Wire.write((uint8_t)(address >> 8)); // MSB
-    Wire.write((uint8_t)(address & 0xFF)); // LSB
-    Wire.write(Code, (uint8_t)byteWrite);
-    txStatus = Wire.endTransmission();
-    if (txStatus != 0)
-    {
-      printDebug(("Error: " + String(txStatus) + " during writing!"));
-      return; // Write error
-    }
-
-    address += byteWrite;    // Increment the EEPROM address
-    Code += byteWrite;       // Increment the input data pointer
-    byteNumber -= byteWrite; // Decrement the number of bytes left to write
-
-    delayMicroseconds(500);
-  }
-}
-
-/**
- * @brief Returns the Number of Cells in the EEPROM.
- *
- * @return uint32_t The Number of Cells in the EEPROM.
- */
-uint32_t Code::length()
-{
-  return (_eepromSize * 128);
-}
-
-#else
-
 #include <EEPROM.h>
 
 /**
@@ -190,7 +92,7 @@ void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
     {
 #if defined(ESP8266) || defined(ESP32)
       EEPROM.write((address + n), Code[n]);
-#elif defined(__AVR__)
+#else
       EEPROM.update((address + n), Code[n]);
 #endif
     }
@@ -240,8 +142,6 @@ uint32_t Code::length()
 
   return (_eepromSize * 128);
 }
-
-#endif
 
 /**
  * @brief Read byte from EEPROM.
