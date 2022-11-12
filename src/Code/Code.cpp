@@ -96,6 +96,12 @@ void Code::write(uint32_t address, byte *Code, uint8_t byteNumber)
       EEPROM.update((address + n), Code[n]);
 #endif
     }
+#if defined(ESP8266) || defined(ESP32) || defined(ARDUINO_ARCH_RP2040)
+    if (!EEPROM.commit())
+    {
+      printDebug("ERROR: EEPROM commit failed!");
+    }
+#endif
   }
   else
   {
