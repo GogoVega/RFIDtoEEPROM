@@ -58,19 +58,15 @@ enum twiClockFreq_t
   TWICLOCK400KHZ = 400000
 };
 
-#if !defined(ARDUINO_ARCH_RP2040)
-
 class RFIDtoEEPROM : public Card
 {
   public:
     RFIDtoEEPROM(uint8_t byteNumber = 4);
 
-    #if defined(ESP32) || defined(ESP8266)
+#if defined(ESP32) || defined(ESP8266) || defined(ARDUINO_ARCH_RP2040)
     void begin(uint32_t eepromSize);
-    #endif
-};
-
 #endif
+};
 
 class RFIDtoEEPROM_I2C : public Card
 {

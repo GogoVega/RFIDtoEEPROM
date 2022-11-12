@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if !defined(ARDUINO_ARCH_RP2040)
-
 #include <RFIDtoEEPROM.h>
 
 /**
@@ -34,7 +32,7 @@ RFIDtoEEPROM::RFIDtoEEPROM(uint8_t byteNumber) : Card(byteNumber)
   _local = true;
 }
 
-#if defined(ESP32) || defined(ESP8266)
+#if defined(ESP32) || defined(ESP8266) || defined(ARDUINO_ARCH_RP2040)
 
 #include <EEPROM.h>
 
@@ -49,6 +47,4 @@ void RFIDtoEEPROM::begin(uint32_t eepromSize)
   _maxCards = min(((EEPROM.length() - 1) / _byteNumber), 255);
 }
 
-#endif // ESP32 || ESP8266
-
-#endif // !ARDUINO_ARCH_RP2040
+#endif // ESP32 || ESP8266 || ARDUINO_ARCH_RP2040
